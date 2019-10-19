@@ -69,7 +69,8 @@
     "ts-node": "^8.3.0"
   },
   "peerDependencies": {
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.18",
+    "typescript": "^3.5.3"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^3.0.4",
