@@ -66,11 +66,11 @@
     "commander": "^3.0.0",
     "glob": "^7.1.4",
     "ora": "^3.4.0",
-    "ts-node": "^8.3.0",
-    "typescript": "^3.5.3"
+    "ts-node": "^8.3.0"
   },
   "peerDependencies": {
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.18",
+    "typescript": "^3.5.3"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^3.0.4",
@@ -84,6 +84,7 @@
     "semantic-release": "^15.13.27",
     "sqlite": "^3.0.3",
     "ts-jest": "^24.0.2",
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.18",
+    "typescript": "^3.5.3"
   }
 }
