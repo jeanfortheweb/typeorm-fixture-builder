@@ -1,0 +1,6 @@
+/lib
+/coverage
+/node_modules
+/example
+yarn-error.log
+test.db
