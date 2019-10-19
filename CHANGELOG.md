@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.1...v1.0.2) (2019-10-19)
+
+
+### Fix
+
+* CLI execution ([d430ca0](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/d430ca00b06a9743af69fde0b5fa91013ad4c4e5))
+* Remove ts-node inclusion in cli ([f2587dc](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/f2587dc11d2f36499f134ac530a5a470e8097fe0))
+* Use typescript as peer dependency ([4c8a86d](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/4c8a86d38c73091b26a5043f410a224dd980bb6b))
+
 ## [1.0.1](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.0...v1.0.1) (2019-10-19)
 
 
