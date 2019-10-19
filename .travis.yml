@@ -40,4 +40,4 @@ jobs:
         - git reset --hard
         - git pull
       script:
-        - lerna publish  --conventional-commits --changelog-preset eslint --yes --allow-branch next
+        - yarn semantic-release
