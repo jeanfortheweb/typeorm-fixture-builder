@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jeanfortheweb/translata.svg?branch=master)](https://travis-ci.org/jeanfortheweb/translata) [![Maintainability](https://api.codeclimate.com/v1/badges/29e376d945395da69418/maintainability)](https://codeclimate.com/github/jeanfortheweb/translata/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/947ddbd81606293ef9a8/test_coverage)](https://codeclimate.com/github/jeanfortheweb/translata/test_coverage)
+[![Build Status](https://travis-ci.org/jeanfortheweb/typeorm-fixture-builder.svg?branch=master)](https://travis-ci.org/jeanfortheweb/typeorm-fixture-builder) [![Maintainability](https://api.codeclimate.com/v1/badges/e37027e3a284fbf4f7d1/maintainability)](https://codeclimate.com/github/jeanfortheweb/typeorm-fixture-builder/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/e37027e3a284fbf4f7d1/test_coverage)](https://codeclimate.com/github/jeanfortheweb/typeorm-fixture-builder/test_coverage)
 
 # typeorm-fixture-builder <!-- omit in toc -->
 
