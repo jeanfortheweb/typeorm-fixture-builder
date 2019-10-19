@@ -4,3 +4,4 @@
 /example
 yarn-error.log
 test.db
+.npmrc
