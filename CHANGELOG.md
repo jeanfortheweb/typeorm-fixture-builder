@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.0...v1.0.1) (2019-10-19)
+
+
+### Fix
+
+* Add missing repository reference ([ba537d2](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/ba537d2c8e704beb43a620b2bf0fb4aa54a6bab8))
+
 # 1.0.0 (2019-10-19)
 
 
