@@ -11,7 +11,6 @@ beforeAll(async () => {
     database: './test.db',
     entities: [Group, User],
     synchronize: true,
-    logging: true,
   });
 });
 
