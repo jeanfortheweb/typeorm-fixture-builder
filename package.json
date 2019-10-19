@@ -40,7 +40,7 @@
     ]
   },
   "release": {
-    "branch": "master",
+    "branch": "next",
     "plugins": [
       [
         "@semantic-release/commit-analyzer",
