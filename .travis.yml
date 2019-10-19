@@ -42,3 +42,5 @@ jobs:
         - git pull
       script:
         - yarn semantic-release
+      after_script:
+        - git push
