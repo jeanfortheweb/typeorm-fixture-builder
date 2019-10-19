@@ -53,7 +53,15 @@
         {
           "preset": "eslint"
         }
-      ]
+      ],
+      "@semantic-release/npm",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      "@semantic-release/git"
     ]
   },
   "dependencies": {
