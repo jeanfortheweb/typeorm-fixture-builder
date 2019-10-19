@@ -1,7 +1,7 @@
 {
   "name": "typeorm-fixture-builder",
   "description": "Painless and type safe data fixtures for typeorm",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "author": {
     "name": "Jean-Pascal 'Johnny' Hövel",
