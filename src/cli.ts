@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import 'ts-node/register';
 import program, { Command } from 'commander';
 import { sync } from 'glob';
 import { Builder } from './builder';
