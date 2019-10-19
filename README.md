@@ -15,6 +15,7 @@ For a comparison to other libraries check the bottom of this readme.
   - [The First Fixture](#the-first-fixture)
   - [Relations](#relations)
   - [Foreign Builders](#foreign-builders)
+  - [Lists and Loops](#lists-and-loops)
   - [Soft Fixture Creation](#soft-fixture-creation)
   - [Programmatic Usage](#programmatic-usage)
 - [Comparison to typeorm-fixtures-cli](#comparison-to-typeorm-fixtures-cli)
@@ -181,6 +182,32 @@ export default builder()
 ```
 
 We are telling our builder to include a certain foreign builder before creating our own fixtures. We can do that as often as we want and order is still not a thing. To use their entity references we pass the builder reference name as third parameter to the `resolver function`.
+
+## Lists and Loops
+
+Often we want to create a bunch of fixtures, maybe a list of fake users. We do not need any special api for this. Just create a simple loop:
+
+```ts
+// fixtures/users.fixture.ts
+
+import { builder } from 'typeorm-fixture-builder';
+import { User } from '../entities/user.entity';
+import { Group } from '../entities/group.entity';
+
+const customerBuilder = builder();
+
+for(let i = 0; i < 100; i++) {
+  customerBuilder.fixture(User, `customer${i}`, async get => ({
+    firstName: `Max ${i}`,
+    lastName: `Mustermann ${i}`,
+    groups: [await get(Group, 'customers')],
+  }));
+}
+
+export default customerBuilder;
+```
+
+You could also use libraries like `faker` to generate you data inside those loops.
 
 ## Soft Fixture Creation
 
