@@ -1,7 +1,7 @@
 {
   "name": "typeorm-fixture-builder",
   "description": "Painless and type safe data fixtures for typeorm",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "license": "MIT",
   "author": {
     "name": "Jean-Pascal 'Johnny' Hövel",
@@ -48,7 +48,12 @@
           "preset": "eslint"
         }
       ],
-      "@semantic-release/release-notes-generator"
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "preset": "eslint"
+        }
+      ]
     ]
   },
   "dependencies": {
@@ -61,6 +66,7 @@
     "typeorm": "^0.2.18"
   },
   "devDependencies": {
+    "@semantic-release/release-notes-generator": "semantic-release/release-notes-generator",
     "@types/glob": "^7.1.1",
     "@types/jest": "^24.0.18",
     "@types/ora": "^3.2.0",
