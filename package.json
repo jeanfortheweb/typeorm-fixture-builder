@@ -3,12 +3,10 @@
   "description": "Painless and type safe data fixtures for typeorm",
   "version": "1.0.0",
   "license": "MIT",
+  "repository": "github:jeanfortheweb/typeorm-fixture-builder",
   "author": {
     "name": "Jean-Pascal 'Johnny' Hövel",
     "email": "jeanfortheweb@gmail.com"
-  },
-  "repository": {
-    "url": ""
   },
   "keywords": [
     "typeorm",
