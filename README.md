@@ -24,8 +24,11 @@ For a comparison to other libraries check the bottom of this readme.
 
 # Installation
 
+Install `typeorm-fixture-builder` and it's peer dependencies. Usually you will install `typescript` as dev dependency:
+
 ```sh
-yarn add typeorm-fixture-builder
+yarn add typeorm typeorm-fixture-builder
+yarn add -D typescript
 ```
 
 This will give you access to the `fixtures` cli utitlity as also to the fixture builder for programmatic usage.
