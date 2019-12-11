@@ -1,3 +1,14 @@
+## [1.0.3](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.2...v1.0.3) (2019-12-11)
+
+
+### Docs
+
+* Update docs ([6bda38d](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/6bda38d360168cd72d3cfd436b5bd77cdb2d5ab3))
+
+### Fix
+
+* Force exit code 0 ([65c44d2](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/65c44d2d576cc91e6c8fc895d9b0706e337c88bb))
+
 ## [1.0.2](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.1...v1.0.2) (2019-10-19)
 
 
