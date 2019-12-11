@@ -1,52 +1,52 @@
 #!/usr/bin/env node
-import 'ts-node/register';
-import program, { Command } from 'commander';
-import { sync } from 'glob';
-import { Builder } from './builder';
-import { relative } from 'path';
-import { createConnection, Connection, ConnectionOptionsReader } from 'typeorm';
-import ora from 'ora';
+import "ts-node/register";
+import program, { Command } from "commander";
+import { sync } from "glob";
+import { Builder } from "./builder";
+import { relative } from "path";
+import { createConnection, Connection, ConnectionOptionsReader } from "typeorm";
+import ora from "ora";
 
 program
-  .command('install [pattern]')
+  .command("install [pattern]")
   .description(
-    'Load fixtures into database. Pattern is optional and can be a glob pattern. [default: "fixtures/**/*.fixture.ts"[',
+    'Load fixtures into database. Pattern is optional and can be a glob pattern. [default: "fixtures/**/*.fixture.ts"['
   )
 
   .option(
-    '-r, --reset-database',
-    'Drops and synchronizes the database before loading fixtures',
+    "-r, --reset-database",
+    "Drops and synchronizes the database before loading fixtures"
   )
   .option(
-    '-c, --connection',
-    'Name of connection to use. Check the typeorm documentation for further information. [default: "default"]',
+    "-c, --connection",
+    'Name of connection to use. Check the typeorm documentation for further information. [default: "default"]'
   )
   .option(
-    '-m, --use-migrations',
-    'Execute migrations instead synchronization after dropping the database',
+    "-m, --use-migrations",
+    "Execute migrations instead synchronization after dropping the database"
   )
   .action(
     async (
-      pattern: string = './fixtures/**/*.fixture.ts',
+      pattern: string = "./fixtures/**/*.fixture.ts",
       {
-        connection: connectionName = 'default',
+        connection: connectionName = "default",
         resetDatabase,
-        useMigrations,
-      }: Command,
+        useMigrations
+      }: Command
     ) => {
-      const spinner = ora('');
+      const spinner = ora("");
 
-      spinner.start('Gathering fixture builders');
+      spinner.start("Gathering fixture builders");
 
       const builders = sync(pattern, {
         cwd: process.cwd(),
-        absolute: true,
+        absolute: true
       }).map<[string, Builder]>(file => {
         try {
           const builder = require(file).default;
 
-          if (builder === undefined || typeof builder.build !== 'function') {
-            throw new Error('Expected builder instance as default export');
+          if (builder === undefined || typeof builder.build !== "function") {
+            throw new Error("Expected builder instance as default export");
           }
 
           return [relative(process.cwd(), file), builder];
@@ -54,8 +54,8 @@ program
           spinner.fail(
             `Failed to load fixture file at: ${relative(
               process.cwd(),
-              file,
-            )}: ${error.message}`,
+              file
+            )}: ${error.message}`
           );
 
           return process.exit(1);
@@ -67,13 +67,13 @@ program
       let connection: Connection;
 
       try {
-        spinner.start('Connecting to database');
+        spinner.start("Connecting to database");
 
         try {
           connection = await createConnection(
             await new ConnectionOptionsReader({
-              root: process.cwd(),
-            }).get(connectionName),
+              root: process.cwd()
+            }).get(connectionName)
           );
         } catch (error) {
           connection = await createConnection(connectionName);
@@ -84,17 +84,17 @@ program
         return process.exit(1);
       }
 
-      spinner.succeed('Connected');
+      spinner.succeed("Connected");
 
       if (resetDatabase === true) {
         try {
           if (useMigrations === true) {
-            spinner.start('Dropping and migrating database');
+            spinner.start("Dropping and migrating database");
 
             await connection.dropDatabase();
             await connection.runMigrations();
           } else {
-            spinner.start('Dropping and synchronizing database');
+            spinner.start("Dropping and synchronizing database");
 
             await connection.dropDatabase();
             await connection.synchronize();
@@ -105,7 +105,7 @@ program
           return process.exit(1);
         }
 
-        spinner.succeed('Database reset complete');
+        spinner.succeed("Database reset complete");
       }
 
       for (const [path, builder] of builders) {
@@ -116,8 +116,9 @@ program
         spinner.succeed(path);
       }
 
-      spinner.succeed('Done');
-    },
+      spinner.succeed("Done");
+      process.exit(0);
+    }
   );
 
 program.parse(process.argv);
