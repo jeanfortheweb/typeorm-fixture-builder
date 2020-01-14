@@ -1,4 +1,4 @@
-import { EntityManager, DeepPartial, Repository } from 'typeorm';
+import { EntityManager, DeepPartial, Repository } from "typeorm";
 
 /**
  * Async data definition function.
@@ -33,7 +33,7 @@ export interface PreResolver<Entity = any> {
   (
     data: DeepPartial<Entity>,
     repository: Repository<Entity>,
-    resolve: Resolver,
+    resolve: Resolver
   ): Promise<Entity | undefined>;
 }
 
@@ -43,7 +43,7 @@ export interface PreResolver<Entity = any> {
  * @param data Data definition.
  */
 function isAsyncData(data: DeepPartial<any> | AsyncData): data is AsyncData {
-  return typeof data === 'function';
+  return typeof data === "function";
 }
 
 /**
@@ -91,7 +91,7 @@ export class Builder {
   fixture<Entity, Name extends string>(
     type: new () => Entity,
     name: Name,
-    data: Data<Entity>,
+    data: Data<Entity>
   ) {
     if (this.data.has(name)) {
       throw new Error(`Cannot push data since name is already taken: ${name}`);
@@ -121,8 +121,6 @@ export class Builder {
       for (const [name, [type, data]] of Array.from(this.data)) {
         await this.build(innerManager, name, type, data);
       }
-
-      this.entities.clear();
     });
   }
 
@@ -138,7 +136,7 @@ export class Builder {
     manager: EntityManager,
     name: string,
     type: new () => Entity,
-    data: Data<Entity>,
+    data: Data<Entity>
   ): Promise<Entity> {
     if (this.entities.has(name) === false) {
       const repository = manager.getRepository(type);
@@ -147,14 +145,14 @@ export class Builder {
       const find = this.resolvers.get(type);
       const found =
         find && (await find(resolved, manager.getRepository(type), resolver));
-      this.entities.set(
-        name,
-        found
-          ? repository.merge(found, resolved)
-          : await repository.save(repository.create(resolved), {
-              transaction: false,
-            }),
-      );
+
+      const entity = found
+        ? await repository.save(repository.merge(found, resolved))
+        : await repository.save(repository.create(resolved), {
+            transaction: false
+          });
+
+      this.entities.set(name, entity);
     }
 
     return this.entities.get(name) as Entity;
@@ -191,7 +189,7 @@ export class Builder {
   private getData<Entity>(
     type: new () => Entity,
     name: string,
-    builderName?: string,
+    builderName?: string
   ): Data<Entity> {
     const builder = this.getBuilder(builderName);
     const typeAndData = builder.data.get(name);
@@ -199,8 +197,8 @@ export class Builder {
     if (typeAndData === undefined) {
       throw new Error(
         `Unable to find fixture reference for name "${name}" ${
-          builderName ? `in builder "${builderName}"` : ''
-        }`,
+          builderName ? `in builder "${builderName}"` : ""
+        }`
       );
     }
 
@@ -208,7 +206,7 @@ export class Builder {
 
     if (type !== actualType) {
       throw new Error(
-        `Type mismatch for reference "${name}": Expected "${type.name}" but found "${actualType.name}"`,
+        `Type mismatch for reference "${name}": Expected "${type.name}" but found "${actualType.name}"`
       );
     }
 
@@ -224,13 +222,13 @@ export class Builder {
     return async <Entity>(
       type: new () => Entity,
       name: string,
-      builderName?: string,
+      builderName?: string
     ): Promise<Entity> => {
       return this.getBuilder(builderName).build<Entity>(
         manager,
         name,
         type,
-        this.getData(type, name, builderName),
+        this.getData(type, name, builderName)
       );
     };
   }
