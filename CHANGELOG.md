@@ -1,3 +1,14 @@
+## [1.0.4](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.3...v1.0.4) (2020-01-14)
+
+
+### Fix
+
+* Duplicate entitiy creation on foreign builder ([3c80a72](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/3c80a7221a5bd0161b8b3e0961a823196d8e7f59))
+
+### Upgrade
+
+* Bump npm from 6.12.0 to 6.13.4 ([281a57f](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/281a57f5f6f1e3ec57fc2d4bf40e7704ebb04ae1))
+
 ## [1.0.3](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.2...v1.0.3) (2019-12-11)
 
 
