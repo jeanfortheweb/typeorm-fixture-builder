@@ -31,10 +31,6 @@ Array [
     "id": 1,
     "name": "Administrators",
   },
-  Group {
-    "id": 2,
-    "name": "Administrators",
-  },
 ]
 `;
 
@@ -44,7 +40,7 @@ Array [
     "firstName": "John",
     "groups": Array [
       Group {
-        "id": 2,
+        "id": 1,
         "name": "Administrators",
       },
     ],
@@ -55,7 +51,7 @@ Array [
     "firstName": "John",
     "groups": Array [
       Group {
-        "id": 2,
+        "id": 1,
         "name": "Administrators",
       },
     ],
