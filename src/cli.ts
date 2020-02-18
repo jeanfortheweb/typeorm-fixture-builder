@@ -18,7 +18,7 @@ program
     "Drops and synchronizes the database before loading fixtures"
   )
   .option(
-    "-c, --connection",
+    "-c, --connection <name>",
     'Name of connection to use. Check the typeorm documentation for further information. [default: "default"]'
   )
   .option(
@@ -29,7 +29,7 @@ program
     async (
       pattern: string = "./fixtures/**/*.fixture.ts",
       {
-        connection: connectionName = "default",
+        connection,
         resetDatabase,
         useMigrations
       }: Command
@@ -37,7 +37,10 @@ program
       const spinner = ora("");
 
       spinner.start("Gathering fixture builders");
-
+      console.log("IN HERE???")
+      console.log(connection);
+      console.log(program.connection);
+      console.log(program.connectionName);
       const builders = sync(pattern, {
         cwd: process.cwd(),
         absolute: true
@@ -64,19 +67,20 @@ program
 
       spinner.succeed(`Found ${builders.length} fixture builders`);
 
-      let connection: Connection;
+      let conn: Connection;
 
       try {
         spinner.start("Connecting to database");
 
         try {
-          connection = await createConnection(
+          conn = await createConnection(
             await new ConnectionOptionsReader({
               root: process.cwd()
-            }).get(connectionName)
+            }).get(connection)
           );
         } catch (error) {
-          connection = await createConnection(connectionName);
+          console.log(error);
+          conn = await createConnection(connection);
         }
       } catch (error) {
         spinner.fail(`Failed to get database connection: ${error.message}`);
@@ -91,13 +95,13 @@ program
           if (useMigrations === true) {
             spinner.start("Dropping and migrating database");
 
-            await connection.dropDatabase();
-            await connection.runMigrations();
+            await conn.dropDatabase();
+            await conn.runMigrations();
           } else {
             spinner.start("Dropping and synchronizing database");
 
-            await connection.dropDatabase();
-            await connection.synchronize();
+            await conn.dropDatabase();
+            await conn.synchronize();
           }
         } catch (error) {
           spinner.fail(`Failed to reset database: ${error.message}`);
@@ -111,7 +115,7 @@ program
       for (const [path, builder] of builders) {
         spinner.start(path);
 
-        await builder.install(connection.manager);
+        await builder.install(conn.manager);
 
         spinner.succeed(path);
       }
