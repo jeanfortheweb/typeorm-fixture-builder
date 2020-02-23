@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   DeepPartial,
   SelectQueryBuilder,
   Repository,
   Connection
-} from "typeorm";
-import { getResolver } from "./reflect";
+} from 'typeorm';
+import { getResolver } from './reflect';
 
 export interface Resolver<Entity extends {} = any> {
   (
@@ -13,7 +14,10 @@ export interface Resolver<Entity extends {} = any> {
   ): SelectQueryBuilder<Entity>;
 }
 
-export async function resolve(connection: Connection, fixture: any) {
+export async function resolve(
+  connection: Connection,
+  fixture: any
+): Promise<any> {
   const repository = connection.getRepository(fixture.constructor);
   const resolver = getResolver(fixture);
 

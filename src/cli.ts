@@ -1,12 +1,15 @@
 #!/usr/bin/env node
-import "ts-node/register";
-import program from "commander";
-import { sync } from "glob";
-import { relative } from "path";
-import { createConnection, Connection, ConnectionOptionsReader } from "typeorm";
-import ora, { Ora } from "ora";
-import { collect } from "./collect";
-import { install } from "./install";
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import 'ts-node/register';
+import program from 'commander';
+import { sync } from 'glob';
+import { relative } from 'path';
+import { createConnection, Connection, ConnectionOptionsReader } from 'typeorm';
+import ora, { Ora } from 'ora';
+import { collect } from './collect';
+import { install } from './install';
 
 interface InstallCommand {
   connection?: string;
@@ -15,7 +18,7 @@ interface InstallCommand {
 }
 
 function collectBundles(spinner: Ora, pattern: string): [string, any[]][] {
-  spinner.start("Collecting fixtures from bundles");
+  spinner.start('Collecting fixtures from bundles');
 
   const bundles = sync(pattern, {
     cwd: process.cwd(),
@@ -46,11 +49,14 @@ function collectBundles(spinner: Ora, pattern: string): [string, any[]][] {
   return bundles;
 }
 
-async function getConnection(spinner: Ora, connectionName: string) {
+async function getConnection(
+  spinner: Ora,
+  connectionName: string
+): Promise<Connection> {
   let connection: Connection;
 
   try {
-    spinner.start("Connecting to database");
+    spinner.start('Connecting to database');
 
     try {
       connection = await createConnection(
@@ -67,25 +73,25 @@ async function getConnection(spinner: Ora, connectionName: string) {
     return process.exit(1);
   }
 
-  spinner.succeed("Connected");
+  spinner.succeed('Connected');
 
   return connection;
 }
 
 async function reset(
-  spinner: Ora,
+  spinner: ora.Ora,
   connection: Connection,
   useMigrations: boolean
-) {
+): Promise<void> {
   try {
     await connection.dropDatabase();
 
     if (useMigrations === true) {
-      spinner.start("Migrating database");
+      spinner.start('Migrating database');
 
       await connection.runMigrations();
     } else {
-      spinner.start("Synchronizing database");
+      spinner.start('Synchronizing database');
 
       await connection.synchronize();
     }
@@ -95,14 +101,14 @@ async function reset(
     return process.exit(1);
   }
 
-  spinner.succeed("Database reset complete");
+  spinner.succeed('Database reset complete');
 }
 
 async function installBundles(
-  spinner: Ora,
+  spinner: ora.Ora,
   connection: Connection,
   bundles: [string, any[]][]
-) {
+): Promise<void> {
   for (const [path, fixtures] of bundles) {
     spinner.start(path);
 
@@ -113,16 +119,16 @@ async function installBundles(
 }
 
 async function action(
-  pattern: string = "./fixtures/**/*.bundle.ts",
+  pattern = './fixtures/**/*.bundle.ts',
   options: InstallCommand
-) {
+): Promise<void> {
   const {
-    connection: connectionName = "default",
+    connection: connectionName = 'default',
     resetDatabase,
     useMigrations
   } = options;
 
-  const spinner = ora("");
+  const spinner = ora('');
   const bundles = collectBundles(spinner, pattern);
   const connection = await getConnection(spinner, connectionName);
 
@@ -132,27 +138,27 @@ async function action(
 
   await installBundles(spinner, connection, bundles);
 
-  spinner.succeed("Done");
+  spinner.succeed('Done');
   process.exit(0);
 }
 
 program
-  .command("install [pattern]")
+  .command('install [pattern]')
   .description(
     'Load fixtures into database. Pattern is optional and can be a glob pattern. [default: "fixtures/**/*.bundle.ts"'
   )
   .option(
-    "-r, --reset-database",
-    "Drops and synchronizes the database before loading fixtures"
+    '-r, --reset-database',
+    'Drops and synchronizes the database before loading fixtures'
   )
   .option(
-    "-c, --connection",
+    '-c, --connection',
     'Name of connection to use. Check the typeorm documentation for further information. [default: "default"]',
-    "default"
+    'default'
   )
   .option(
-    "-m, --use-migrations",
-    "Execute migrations instead synchronization after dropping the database"
+    '-m, --use-migrations',
+    'Execute migrations instead synchronization after dropping the database'
   )
   .action(action);
 

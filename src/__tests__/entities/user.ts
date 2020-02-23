@@ -4,11 +4,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
-  JoinColumn,
-  OneToMany
-} from "typeorm";
-import { Group } from "./group";
-import { Profile } from "./profile";
+  JoinColumn
+} from 'typeorm';
+import { Group } from './group';
+import { Profile } from './profile';
 
 @Entity()
 export class User {

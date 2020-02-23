@@ -3,18 +3,17 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
-  ManyToOne,
   OneToMany
-} from "typeorm";
-import { User } from "./user";
-import { Picture } from "./picture";
+} from 'typeorm';
+import { User } from './user';
+import { Picture } from './picture';
 
 @Entity()
 export class Profile {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
-  @Column("text")
+  @Column('text')
   bio: string;
 
   @OneToOne(

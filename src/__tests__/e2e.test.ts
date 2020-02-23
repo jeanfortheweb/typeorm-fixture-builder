@@ -1,21 +1,48 @@
-import { createConnection, Connection } from "typeorm";
-import { Group } from "./entities/group";
-import { User } from "./entities/user";
-import { install } from "../install";
-import { collect } from "../collect";
-import { Profile } from "./entities/profile";
-import { isPersisted } from "../reflect";
-import { fixture } from "../fixture";
-import { Picture } from "./entities/picture";
-import { dirname, resolve } from "path";
-import { exec } from "child_process";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createConnection, Connection } from 'typeorm';
+import { Group } from './entities/group';
+import { User } from './entities/user';
+import { install } from '../install';
+import { collect } from '../collect';
+import { Profile } from './entities/profile';
+import { isPersisted } from '../reflect';
+import { fixture } from '../fixture';
+import { Picture } from './entities/picture';
+import { dirname, resolve } from 'path';
+import { exec } from 'child_process';
+
+interface Result {
+  code?: number;
+  error: Error | null;
+  stdout: string;
+  stderr: string;
+}
+
+const executable = resolve(__dirname, '..', '..', 'bin', './cli.js');
+
+function run(cwd: string, args: string[]): Promise<Result> {
+  return new Promise(resolve => {
+    exec(
+      `node ${executable} ${args.join(' ')}`,
+      { cwd },
+      (error, stdout, stderr) => {
+        resolve({
+          code: error && error.code ? error.code : 0,
+          error,
+          stdout,
+          stderr
+        });
+      }
+    );
+  });
+}
 
 let connection: Connection;
-const database = resolve(__dirname, "..", "..", "test.db");
+const database = resolve(__dirname, '..', '..', 'test.db');
 
 beforeEach(async () => {
   connection = await createConnection({
-    type: "sqlite",
+    type: 'sqlite',
     database,
     entities: [Group, User, Profile, Picture],
     dropSchema: true,
@@ -29,13 +56,14 @@ afterEach(async () => {
   }
 });
 
-describe("install", () => {
+describe('install', () => {
   it.each`
     scenario
-    ${"./scenarios/simple/simple.bundle.ts"}
-    ${"./scenarios/complex/complex.bundle.ts"}
-    ${"./scenarios/imports/imports.bundle.ts"}
-  `("should successfully complete scenario $scenario", async ({ scenario }) => {
+    ${'./scenarios/simple/simple.bundle.ts'}
+    ${'./scenarios/complex/complex.bundle.ts'}
+    ${'./scenarios/imports/imports.bundle.ts'}
+  `('should successfully complete scenario $scenario', async ({ scenario }) => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fixtures = collect(require(scenario)) as any[];
     const fixturesByType = fixtures.reduce<{ [key: string]: any[] }>(
       (grouped, fixture) => ({
@@ -62,28 +90,29 @@ describe("install", () => {
     }
   });
 
-  it("should fail on invalid bundle", () => {
+  it('should fail on invalid bundle', () => {
     expect(() =>
-      collect(require("./scenarios/invalid/invalid.bundle"))
-    ).toThrow("Invalid fixture definition.");
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      collect(require('./scenarios/invalid/invalid.bundle'))
+    ).toThrow('Invalid fixture definition.');
   });
 
-  describe("resolve", () => {
-    it("should use and merge resolved entity", async () => {
+  describe('resolve', () => {
+    it('should use and merge resolved entity', async () => {
       const resolver = jest.fn((repository, { firstName }) =>
         repository
-          .createQueryBuilder("user")
-          .where("user.firstName = :firstName", { firstName })
+          .createQueryBuilder('user')
+          .where('user.firstName = :firstName', { firstName })
       );
 
       const user1 = fixture(
         User,
-        { firstName: "Foo", lastName: "Bar" },
+        { firstName: 'Foo', lastName: 'Bar' },
         resolver
       );
       const user2 = fixture(
         User,
-        { firstName: "Foo", lastName: "Baz" },
+        { firstName: 'Foo', lastName: 'Baz' },
         resolver
       );
 
@@ -93,27 +122,27 @@ describe("install", () => {
       expect(await connection.getRepository(User).count()).toEqual(1);
       expect(await connection.getRepository(User).findOne()).toEqual({
         id: 1,
-        firstName: "Foo",
-        lastName: "Baz"
+        firstName: 'Foo',
+        lastName: 'Baz'
       });
     });
 
-    it("should use fixture when no entity is resolved", async () => {
+    it('should use fixture when no entity is resolved', async () => {
       const resolver = jest.fn(repository =>
         repository
-          .createQueryBuilder("user")
-          .where("user.firstName = :firstName", { firstName: "Baz" })
+          .createQueryBuilder('user')
+          .where('user.firstName = :firstName', { firstName: 'Baz' })
       );
 
       const user1 = fixture(
         User,
-        { firstName: "Foo", lastName: "Bar" },
+        { firstName: 'Foo', lastName: 'Bar' },
         resolver
       );
 
       const user2 = fixture(
         User,
-        { firstName: "Foo", lastName: "Baz" },
+        { firstName: 'Foo', lastName: 'Baz' },
         resolver
       );
 
@@ -124,34 +153,33 @@ describe("install", () => {
       expect(await connection.getRepository(User).find()).toEqual([
         {
           id: 1,
-          firstName: "Foo",
-          lastName: "Bar"
+          firstName: 'Foo',
+          lastName: 'Bar'
         },
         {
           id: 2,
-          firstName: "Foo",
-          lastName: "Baz"
+          firstName: 'Foo',
+          lastName: 'Baz'
         }
       ]);
     });
   });
 });
 
-describe("cli", () => {
-  const executable = resolve(__dirname, "..", "..", "bin", "./cli.js");
-
+describe('cli', () => {
   beforeAll(done => {
-    exec("yarn compile:test", { cwd: dirname(dirname(__dirname)) }, () =>
+    exec('yarn compile:test', { cwd: dirname(dirname(__dirname)) }, () =>
       done()
     );
   }, 20000);
 
-  it("should fail with unknown options", async () => {
-    expect((await run(".", ["-p", "parameter"])).code).toEqual(1);
+  it('should fail with unknown options', async () => {
+    expect((await run('.', ['-p', 'parameter'])).code).toEqual(1);
   });
 
-  it("should successfully install a bundle", async () => {
-    const scenario = resolve(__dirname, "./scenarios/simple/simple.bundle.ts");
+  it('should successfully install a bundle', async () => {
+    const scenario = resolve(__dirname, './scenarios/simple/simple.bundle.ts');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fixtures = collect(require(scenario)) as any[];
     const fixturesByType = fixtures.reduce<{ [key: string]: any[] }>(
       (grouped, fixture) => ({
@@ -164,7 +192,7 @@ describe("cli", () => {
       {}
     );
 
-    const { code } = await run(".", ["install", "-r", scenario]);
+    const { code } = await run('.', ['install', '-r', scenario]);
 
     expect(code).toEqual(0);
 
@@ -173,41 +201,15 @@ describe("cli", () => {
         fixtures.length
       );
     }
-
-    await connection.close();
   }, 20000);
 
-  it("should fail on an invalid bundle", async () => {
+  it('should fail on an invalid bundle', async () => {
     const scenario = resolve(
       __dirname,
-      "./scenarios/invalid/invalid.bundle.ts"
+      './scenarios/invalid/invalid.bundle.ts'
     );
-    const { code, stderr } = await run(".", ["install", "-r", scenario]);
+    const { code } = await run('.', ['install', '-r', scenario]);
 
     expect(code).toEqual(1);
   }, 20000);
-
-  interface Result {
-    code?: number;
-    error: Error | null;
-    stdout: string;
-    stderr: string;
-  }
-
-  function run(cwd: string, args: string[]): Promise<Result> {
-    return new Promise(resolve => {
-      exec(
-        `node ${executable} ${args.join(" ")}`,
-        { cwd },
-        (error, stdout, stderr) => {
-          resolve({
-            code: error && error.code ? error.code : 0,
-            error,
-            stdout,
-            stderr
-          });
-        }
-      );
-    });
-  }
 });

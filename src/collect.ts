@@ -1,11 +1,33 @@
-import { isFixture } from "./reflect";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { isFixture } from './reflect';
+
+/**
+ * Collects fixtures from an arbitrary object or array structure.
+ * Any value inside that structure has to be either an array of fixtures or an object which
+ * values lead to a fixture.
+ *
+ * @param value Object or Array to collect from.
+ */
+export function collect(value: any): any[] {
+  if (value && Array.isArray(value)) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    return collectArray(value);
+  }
+
+  if (typeof value === 'object') {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    return collectObject(value);
+  }
+
+  throw new Error(`Invalid fixture definition.`);
+}
 
 /**
  * Collects fixtures from an array type.
  *
  * @param value Array.
  */
-function collectArray(value: any[]) {
+function collectArray(value: any[]): any[] {
   return value.reduce<any[]>(
     (fixtures, element) => [...fixtures, ...collect(element)],
     []
@@ -17,7 +39,7 @@ function collectArray(value: any[]) {
  *
  * @param value Object.
  */
-function collectObject(value: any) {
+function collectObject(value: any): any[] {
   if (isFixture(value)) {
     return [value];
   } else {
@@ -26,23 +48,4 @@ function collectObject(value: any) {
       []
     );
   }
-}
-
-/**
- * Collects fixtures from an arbitrary object or array structure.
- * Any value inside that structure has to be either an array of fixtures or an object which
- * values lead to a fixture.
- *
- * @param value Object or Array to collect from.
- */
-export function collect(value: any): any[] {
-  if (value && Array.isArray(value)) {
-    return collectArray(value);
-  }
-
-  if (typeof value === "object") {
-    return collectObject(value);
-  }
-
-  throw new Error(`Invalid fixture definition.`);
 }
