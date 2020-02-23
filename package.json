@@ -31,7 +31,8 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "/entities/"
+      "/entities/",
+      "/scenarios/"
     ],
     "coveragePathIgnorePatterns": [
       "/lib/"
