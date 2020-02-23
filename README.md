@@ -10,13 +10,10 @@ For a comparison to other libraries check the bottom of this readme.
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [How Fixtures are collected from Bundle Files](#how-fixtures-are-collected-from-bundle-files)
-  - [The Export is a Fixture itself](#the-export-is-a-fixture-itself)
-  - [The Export is an Array of Fixtures](#the-export-is-an-array-of-fixtures)
-  - [The Export is an Object where the Property Values are Fixtures](#the-export-is-an-object-where-the-property-values-are-fixtures)
+- [Fixture Bundle Files](#fixture-bundle-files)
 - [Relations](#relations)
 - [Foreign Bundle Files and Helpers](#foreign-bundle-files-and-helpers)
-  - [Soft Fixture Creation / Resolvers](#soft-fixture-creation--resolvers)
+- [Soft Fixture Creation / Resolvers](#soft-fixture-creation--resolvers)
 - [Programmatic Usage](#programmatic-usage)
 
 # Installation
@@ -66,7 +63,7 @@ yarn fixtures --help
 yarn fixtures install --help
 ```
 
-# How Fixtures are collected from Bundle Files
+# Fixture Bundle Files
 
 The CLI will collect your fixtures from bundles in a smart but yet simple way.
 Every fixture you want to get peristed has to be exported by the bundle file. Also,
@@ -77,42 +74,42 @@ wish to.
 
 The following rules apply to exports from bundle files:
 
-## The Export is a Fixture itself
+1. The export is a fixture itself:
 
-```ts
-import { fixture } from 'typeorm-fixture-builder';
-import { User } from '../entities/User.entity';
+      ```ts
+      import { fixture } from 'typeorm-fixture-builder';
+      import { User } from '../entities/User.entity';
 
-export const user = fixture(User, { firstName: 'Foo' });
-```
+      export const user = fixture(User, { firstName: 'Foo' });
+      ```
 
-## The Export is an Array of Fixtures
+2. The export is an array of fixtures:
 
-```ts
-import { fixture } from 'typeorm-fixture-builder';
-import { User } from '../entities/User.entity';
+      ```ts
+      import { fixture } from 'typeorm-fixture-builder';
+      import { User } from '../entities/User.entity';
 
-export const users = [
-  fixture(User, { firstName: 'Foo' }),
-  fixture(User, { firstName: 'Bar' }),
-  fixture(User, { firstName: 'Baz' }),
-];
-```
+      export const users = [
+        fixture(User, { firstName: 'Foo' }),
+        fixture(User, { firstName: 'Bar' }),
+        fixture(User, { firstName: 'Baz' }),
+      ];
+      ```
 
-## The Export is an Object where the Property Values are Fixtures
+3. The export is an Object where the property values are fixtures:
 
-```ts
-import { fixture } from 'typeorm-fixture-builder';
-import { User } from '../entities/User.entity';
+      ```ts
+      import { fixture } from 'typeorm-fixture-builder';
+      import { User } from '../entities/User.entity';
 
-export const users = {
-  foo: fixture(User, { firstName: 'Foo' }),
-  bar: fixture(User, { firstName: 'Bar' }),
-  baz: fixture(User, { firstName: 'Baz' }),
-};
-```
+      export const users = {
+        foo: fixture(User, { firstName: 'Foo' }),
+        bar: fixture(User, { firstName: 'Bar' }),
+        baz: fixture(User, { firstName: 'Baz' }),
+      };
+      ```
 
-These rules can be combined to allow deeper nested Structures
+These rules can be combined to allow deeper nested structures:
 
 ```ts
 import { fixture } from 'typeorm-fixture-builder';
@@ -232,7 +229,7 @@ import { createRandomUsers } from './helpers.ts';
 export const users = createRandomUsers(10);
 ```
 
-## Soft Fixture Creation / Resolvers
+# Soft Fixture Creation / Resolvers
 
 Sometimes, we do not want to create new database entries but use existing ones to update them or to prevent new data creation when fixtures run more
 than once.
