@@ -25,17 +25,20 @@
   },
   "scripts": {
     "compile:cjs": "rm -rf lib/cjs && tsc --p tsconfig.cjs.json",
-    "compile:esm": "rm -rf lib/esm && tsc --p tsconfig.esm.json"
+    "compile:esm": "rm -rf lib/esm && tsc --p tsconfig.esm.json",
+    "compile:test": "rm -rf lib/cjs && tsc --p tsconfig.test.json"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
       "/entities/",
-      "/scenarios/"
+      "/scenarios/",
+      "/*.js/"
     ],
     "coveragePathIgnorePatterns": [
-      "/lib/"
+      "/lib/",
+      "/__tests__/"
     ]
   },
   "release": {
