@@ -1,7 +1,7 @@
 if: tag IS blank
 language: node_js
 node_js:
-  - 'lts/*'
+  - "lts/*"
 
 cache:
   yarn: true
@@ -41,6 +41,8 @@ jobs:
         - git reset --hard
         - git pull
       script:
+        - yarn compile:cjs
+        - yarn compile:esm
         - yarn semantic-release
       after_script:
         - git push
