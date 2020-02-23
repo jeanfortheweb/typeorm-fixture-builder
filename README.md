@@ -4,8 +4,6 @@
 
 **typeorm-fixture-builder** was created when I struggled with the current fixture solutions for typeorm avaible. They simply didn't fit my needs and/or weren't flexible enough. So I decided to create another one.
 
-For a comparison to other libraries check the bottom of this readme.
-
 # Documentation <!-- omit in toc -->
 
 - [Installation](#installation)
