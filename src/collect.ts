@@ -8,7 +8,7 @@ import { isFixture } from './reflect';
  *
  * @param value Object or Array to collect from.
  */
-export function collect(value: any): any[] {
+export function collect<Bundle, Entity>(value: Bundle): Entity[] {
   if (value && Array.isArray(value)) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     return collectArray(value);

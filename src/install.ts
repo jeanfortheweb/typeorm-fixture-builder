@@ -10,9 +10,9 @@ import { persist } from './persist';
  * @param connection Connection.
  * @param fixtures Array of fixtures.
  */
-export async function install(
+export async function install<Entity>(
   connection: Connection,
-  fixtures: any[],
+  fixtures: Entity[],
 ): Promise<void> {
   await connection.transaction(async manager => {
     for (const fixture of fixtures) {
