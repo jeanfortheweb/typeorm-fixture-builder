@@ -25,42 +25,28 @@
   },
   "scripts": {
     "compile:cjs": "rm -rf lib/cjs && tsc --p tsconfig.cjs.json",
-    "compile:esm": "rm -rf lib/esm && tsc --p tsconfig.esm.json"
+    "compile:esm": "rm -rf lib/esm && tsc --p tsconfig.esm.json",
+    "compile:test": "rm -rf lib/cjs && tsc --p tsconfig.test.json"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "/entities/"
+      "/entities/",
+      "/scenarios/",
+      "/*.js/"
     ],
     "coveragePathIgnorePatterns": [
-      "/lib/"
+      "/lib/",
+      "/__tests__/"
     ]
   },
-  "release": {
-    "branch": "next",
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "eslint"
-        }
-      ],
-      [
-        "@semantic-release/release-notes-generator",
-        {
-          "preset": "eslint"
-        }
-      ],
-      "@semantic-release/npm",
-      [
-        "@semantic-release/changelog",
-        {
-          "changelogFile": "CHANGELOG.md"
-        }
-      ],
-      "@semantic-release/git"
-    ]
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "eslint . --ext .ts,.tsx",
+      "pre-push": "yarn tsc --noEmit"
+    }
   },
   "dependencies": {
     "commander": "^3.0.0",
@@ -79,8 +65,14 @@
     "@types/glob": "^7.1.1",
     "@types/jest": "^24.0.18",
     "@types/ora": "^3.2.0",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "commitlint": "^8.3.5",
     "conventional-changelog-eslint": "^3.0.4",
+    "eslint": "^6.8.0",
+    "husky": "^4.2.3",
     "jest": "^24.9.0",
+    "prettier": "^1.19.1",
     "semantic-release": "^15.13.27",
     "sqlite": "^3.0.3",
     "ts-jest": "^24.0.2",

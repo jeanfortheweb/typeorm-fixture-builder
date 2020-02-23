@@ -15,8 +15,6 @@ install:
   - git config --global user.name $GITHUB_USER
   - git remote set-url origin "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git"
   - yarn
-  - yarn compile:cjs
-  - yarn compile:esm
 
 jobs:
   include:
@@ -41,6 +39,8 @@ jobs:
         - git reset --hard
         - git pull
       script:
+        - yarn compile:cjs
+        - yarn compile:esm
         - yarn semantic-release
       after_script:
         - git push

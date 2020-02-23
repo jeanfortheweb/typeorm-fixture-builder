@@ -1,5 +1,13 @@
-import { Entity, ManyToMany, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  ManyToMany,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn
+} from 'typeorm';
 import { Group } from './group';
+import { Profile } from './profile';
 
 @Entity()
 export class User {
@@ -12,6 +20,16 @@ export class User {
   @Column()
   lastName: string;
 
-  @ManyToMany(() => Group, group => group.users)
+  @ManyToMany(
+    () => Group,
+    group => group.users
+  )
   groups: Group[];
+
+  @OneToOne(
+    () => Profile,
+    profile => profile.user
+  )
+  @JoinColumn()
+  profile: Profile;
 }
