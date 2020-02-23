@@ -14,12 +14,12 @@ import { resolve } from './resolve';
 async function persistManyRelation(
   connection: Connection,
   fixture: any,
-  propertyName: string
+  propertyName: string,
 ): Promise<void> {
   for (const index in fixture[propertyName] || []) {
     fixture[propertyName][index] = await persist(
       connection,
-      fixture[propertyName][index]
+      fixture[propertyName][index],
     );
   }
 }
@@ -34,7 +34,7 @@ async function persistManyRelation(
 async function persistOneRelation(
   connection: Connection,
   fixture: any,
-  propertyName: string
+  propertyName: string,
 ): Promise<void> {
   if (fixture[propertyName]) {
     fixture[propertyName] = await persist(connection, fixture[propertyName]);
@@ -49,7 +49,7 @@ async function persistOneRelation(
  */
 async function persistRelations(
   connection: Connection,
-  fixture: any
+  fixture: any,
 ): Promise<void> {
   const { relations } = connection.getMetadata(fixture.constructor);
 
@@ -76,7 +76,7 @@ async function persistRelations(
  */
 async function persistEntity(
   connection: Connection,
-  fixture: any
+  fixture: any,
 ): Promise<void> {
   return connection
     .getRepository(fixture.constructor)
@@ -91,7 +91,7 @@ async function persistEntity(
  */
 export async function persist(
   connection: Connection,
-  fixture: any
+  fixture: any,
 ): Promise<any> {
   if (isPersisted(fixture) === false) {
     await persistRelations(connection, fixture);

@@ -22,7 +22,7 @@ function collectBundles(spinner: Ora, pattern: string): [string, any[]][] {
 
   const bundles = sync(pattern, {
     cwd: process.cwd(),
-    absolute: true
+    absolute: true,
   }).map<[string, any[]]>(file => {
     try {
       return [relative(process.cwd(), file), collect(require(file))];
@@ -30,7 +30,7 @@ function collectBundles(spinner: Ora, pattern: string): [string, any[]][] {
       spinner.fail(
         `Failed to load bundle file at: ${relative(process.cwd(), file)}: ${
           error.message
-        }`
+        }`,
       );
 
       return process.exit(1);
@@ -39,11 +39,11 @@ function collectBundles(spinner: Ora, pattern: string): [string, any[]][] {
 
   const count = bundles.reduce(
     (count, fixtures) => (count += fixtures.length),
-    0
+    0,
   );
 
   spinner.succeed(
-    `Found ${bundles.length} fixture bundles with a total of ${count} fixtures`
+    `Found ${bundles.length} fixture bundles with a total of ${count} fixtures`,
   );
 
   return bundles;
@@ -51,7 +51,7 @@ function collectBundles(spinner: Ora, pattern: string): [string, any[]][] {
 
 async function getConnection(
   spinner: Ora,
-  connectionName: string
+  connectionName: string,
 ): Promise<Connection> {
   let connection: Connection;
 
@@ -61,8 +61,8 @@ async function getConnection(
     try {
       connection = await createConnection(
         await new ConnectionOptionsReader({
-          root: process.cwd()
-        }).get(connectionName)
+          root: process.cwd(),
+        }).get(connectionName),
       );
     } catch (error) {
       connection = await createConnection(connectionName);
@@ -81,7 +81,7 @@ async function getConnection(
 async function reset(
   spinner: ora.Ora,
   connection: Connection,
-  useMigrations: boolean
+  useMigrations: boolean,
 ): Promise<void> {
   try {
     await connection.dropDatabase();
@@ -107,7 +107,7 @@ async function reset(
 async function installBundles(
   spinner: ora.Ora,
   connection: Connection,
-  bundles: [string, any[]][]
+  bundles: [string, any[]][],
 ): Promise<void> {
   for (const [path, fixtures] of bundles) {
     spinner.start(path);
@@ -120,12 +120,12 @@ async function installBundles(
 
 async function action(
   pattern = './fixtures/**/*.bundle.ts',
-  options: InstallCommand
+  options: InstallCommand,
 ): Promise<void> {
   const {
     connection: connectionName = 'default',
     resetDatabase,
-    useMigrations
+    useMigrations,
   } = options;
 
   const spinner = ora('');
@@ -145,20 +145,20 @@ async function action(
 program
   .command('install [pattern]')
   .description(
-    'Load fixtures into database. Pattern is optional and can be a glob pattern. [default: "fixtures/**/*.bundle.ts"'
+    'Load fixtures into database. Pattern is optional and can be a glob pattern. [default: "fixtures/**/*.bundle.ts"',
   )
   .option(
     '-r, --reset-database',
-    'Drops and synchronizes the database before loading fixtures'
+    'Drops and synchronizes the database before loading fixtures',
   )
   .option(
     '-c, --connection',
     'Name of connection to use. Check the typeorm documentation for further information. [default: "default"]',
-    'default'
+    'default',
   )
   .option(
     '-m, --use-migrations',
-    'Execute migrations instead synchronization after dropping the database'
+    'Execute migrations instead synchronization after dropping the database',
   )
   .action(action);
 

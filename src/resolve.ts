@@ -3,20 +3,20 @@ import {
   DeepPartial,
   SelectQueryBuilder,
   Repository,
-  Connection
+  Connection,
 } from 'typeorm';
 import { getResolver } from './reflect';
 
 export interface Resolver<Entity extends {} = any> {
   (
     repository: Repository<Entity>,
-    values: DeepPartial<Entity>
+    values: DeepPartial<Entity>,
   ): SelectQueryBuilder<Entity>;
 }
 
 export async function resolve(
   connection: Connection,
-  fixture: any
+  fixture: any,
 ): Promise<any> {
   const repository = connection.getRepository(fixture.constructor);
   const resolver = getResolver(fixture);

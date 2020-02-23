@@ -14,14 +14,14 @@ export function isFixture(target: Record<string, any>): boolean {
 
 export function setPersisted(
   target: Record<string, any>,
-  value: boolean
+  value: boolean,
 ): void {
   Reflect.defineMetadata(META_PERSISTED, value, target);
 }
 
 export function setResolver(
   target: Record<string, any>,
-  value: Resolver | undefined
+  value: Resolver | undefined,
 ): void {
   Reflect.defineMetadata(META_RESOLVER, value, target);
 }

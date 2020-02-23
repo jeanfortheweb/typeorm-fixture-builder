@@ -30,7 +30,7 @@ export function collect(value: any): any[] {
 function collectArray(value: any[]): any[] {
   return value.reduce<any[]>(
     (fixtures, element) => [...fixtures, ...collect(element)],
-    []
+    [],
   );
 }
 
@@ -45,7 +45,7 @@ function collectObject(value: any): any[] {
   } else {
     return Object.values(value).reduce<any[]>(
       (fixtures, element) => [...fixtures, ...collect(element)],
-      []
+      [],
     );
   }
 }
