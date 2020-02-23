@@ -3,7 +3,7 @@ import {
   DeepPartial,
   SelectQueryBuilder,
   Repository,
-  Connection,
+  EntityManager,
 } from 'typeorm';
 import { getResolver } from './reflect';
 
@@ -15,10 +15,10 @@ export interface Resolver<Entity extends {} = any> {
 }
 
 export async function resolve(
-  connection: Connection,
+  manager: EntityManager,
   fixture: any,
 ): Promise<any> {
-  const repository = connection.getRepository(fixture.constructor);
+  const repository = manager.getRepository(fixture.constructor);
   const resolver = getResolver(fixture);
 
   if (resolver !== undefined) {

@@ -6,7 +6,9 @@ export async function install(
   connection: Connection,
   fixtures: any[],
 ): Promise<void> {
-  for (const fixture of fixtures) {
-    await persist(connection, fixture);
-  }
+  await connection.transaction(async manager => {
+    for (const fixture of fixtures) {
+      await persist(manager, fixture);
+    }
+  });
 }

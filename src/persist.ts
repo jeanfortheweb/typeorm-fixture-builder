@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Connection } from 'typeorm';
+import { Connection, EntityManager } from 'typeorm';
 import { isPersisted, setPersisted } from './reflect';
 import { resolve } from './resolve';
 
 /**
  * Persists an array relation (many-to-many, one-to-many)
  *
- * @param connection TypeORM connection.
+ * @param manager EntityManager.
  * @param fixture Fixture.
  * @param propertyName Property.
  */
 async function persistManyRelation(
-  connection: Connection,
+  manager: EntityManager,
   fixture: any,
   propertyName: string,
 ): Promise<void> {
   for (const index in fixture[propertyName] || []) {
     fixture[propertyName][index] = await persist(
-      connection,
+      manager,
       fixture[propertyName][index],
     );
   }
@@ -27,42 +27,42 @@ async function persistManyRelation(
 /**
  * Persists a non array relation (one-to-one, many-to-one).
  *
- * @param connection TypeORM connection.
+ * @param manager EntityManager.
  * @param fixture Fixture.
  * @param propertyName Property.
  */
 async function persistOneRelation(
-  connection: Connection,
+  manager: EntityManager,
   fixture: any,
   propertyName: string,
 ): Promise<void> {
   if (fixture[propertyName]) {
-    fixture[propertyName] = await persist(connection, fixture[propertyName]);
+    fixture[propertyName] = await persist(manager, fixture[propertyName]);
   }
 }
 
 /**
  * Persists the relations of a fixture.
  *
- * @param connection TypeORM connection.
+ * @param manager EntityManager.
  * @param fixture Fixture.
  */
 async function persistRelations(
-  connection: Connection,
+  manager: EntityManager,
   fixture: any,
 ): Promise<void> {
-  const { relations } = connection.getMetadata(fixture.constructor);
+  const { relations } = manager.connection.getMetadata(fixture.constructor);
 
   for (const { propertyName, relationType } of relations) {
     switch (relationType) {
       case 'many-to-many':
       case 'one-to-many':
-        await persistManyRelation(connection, fixture, propertyName);
+        await persistManyRelation(manager, fixture, propertyName);
         break;
 
       case 'many-to-one':
       case 'one-to-one':
-        await persistOneRelation(connection, fixture, propertyName);
+        await persistOneRelation(manager, fixture, propertyName);
         break;
     }
   }
@@ -71,31 +71,31 @@ async function persistRelations(
 /**
  * Persists the fixture itself.
  *
- * @param connection TypeORM connection.
+ * @param manager EntityManager.
  * @param fixture Fixture.
  */
 async function persistEntity(
-  connection: Connection,
+  manager: EntityManager,
   fixture: any,
 ): Promise<void> {
-  return connection
+  return manager
     .getRepository(fixture.constructor)
-    .save(await resolve(connection, fixture));
+    .save(await resolve(manager, fixture));
 }
 
 /**
  * Persists a fixture.
  *
- * @param connection TypeORM connection.
+ * @param manager EntityManager.
  * @param fixture Fixture.
  */
 export async function persist(
-  connection: Connection,
+  manager: EntityManager,
   fixture: any,
 ): Promise<any> {
   if (isPersisted(fixture) === false) {
-    await persistRelations(connection, fixture);
-    await persistEntity(connection, fixture);
+    await persistRelations(manager, fixture);
+    await persistEntity(manager, fixture);
 
     setPersisted(fixture, true);
   }
