@@ -287,3 +287,43 @@ export const user = createSoftUserFixture({
 Such functions could also be placed in some kind of non bundle helper files, of course.
 
 # Programmatic Usage
+
+If you just want to install some fixtures programmatically, you can import and use the `install` function. It takes a TypeORM connection and an array of fixtures:
+
+```ts
+import { fixture, install } from 'typeorm-fixture-builder';
+import { createConnection } from 'typeorm';
+import { User } from '../entities/user.entity';
+
+export const user1 = fixture(User, {
+  firstName: 'John',
+  lastName: 'Doe',
+});
+
+export const user2 = fixture(User, {
+  firstName: 'Max',
+  lastName: 'Mustermann',
+});
+
+async function installFixtures() {
+  const connection = await createConnection();
+  await install(connection, [user1, user2]);
+}
+
+installFixtures();
+```
+
+You can also import and collect fixtures from bundle files. Import and use the `collect` function. Pass the imported bundle module and it will return an array of collected fixtures:
+
+```ts
+import { fixture, collect, install } from 'typeorm-fixture-builder';
+import { createConnection } from 'typeorm';
+import UserBundle from '../fixtures/user.bundle';
+
+async function installFixtures() {
+  const connection = await createConnection();
+  await install(connection, collect(UserBundle));
+}
+
+installFixtures();
+```
