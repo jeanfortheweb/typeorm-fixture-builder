@@ -1,7 +1,7 @@
 if: tag IS blank
 language: node_js
 node_js:
-  - "lts/*"
+  - 'lts/*'
 
 cache:
   yarn: true
@@ -15,8 +15,6 @@ install:
   - git config --global user.name $GITHUB_USER
   - git remote set-url origin "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git"
   - yarn
-  - yarn compile:cjs
-  - yarn compile:esm
 
 jobs:
   include:
