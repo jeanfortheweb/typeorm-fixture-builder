@@ -150,11 +150,6 @@ describe("cli", () => {
     expect((await run(".", ["-p", "parameter"])).code).toEqual(1);
   });
 
-  it("should display correct help texts", async () => {
-    expect((await run(".", ["--help"])).stdout).toMatchSnapshot();
-    expect((await run(".", ["install", "--help"])).stdout).toMatchSnapshot();
-  });
-
   it("should successfully install a bundle", async () => {
     const scenario = resolve(__dirname, "./scenarios/simple/simple.bundle.ts");
     const fixtures = collect(require(scenario)) as any[];
