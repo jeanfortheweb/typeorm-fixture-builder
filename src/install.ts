@@ -2,6 +2,14 @@
 import { Connection } from 'typeorm';
 import { persist } from './persist';
 
+/**
+ * Uses the given connection to install an array of fixtures.
+ * Fixtures have to be defined by using the `fixture` function.
+ *
+ * @see fixture
+ * @param connection Connection.
+ * @param fixtures Array of fixtures.
+ */
 export async function install(
   connection: Connection,
   fixtures: any[],

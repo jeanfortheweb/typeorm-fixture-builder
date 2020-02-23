@@ -11,12 +11,21 @@ import ora, { Ora } from 'ora';
 import { collect } from './collect';
 import { install } from './install';
 
+/**
+ * Defines the options of the "install" command.
+ */
 interface InstallCommand {
   connection?: string;
   resetDatabase: boolean;
   useMigrations: boolean;
 }
 
+/**
+ * Collects the paths and fixtures from bundle files using the given pattern.
+ *
+ * @param spinner Spinner.
+ * @param pattern Pattern.
+ */
 function collectBundles(spinner: Ora, pattern: string): [string, any[]][] {
   spinner.start('Collecting fixtures from bundles');
 
@@ -49,6 +58,12 @@ function collectBundles(spinner: Ora, pattern: string): [string, any[]][] {
   return bundles;
 }
 
+/**
+ * Creates a database connection using a connection name.
+ *
+ * @param spinner Spinner.
+ * @param connectionName Connection name.
+ */
 async function getConnection(
   spinner: Ora,
   connectionName: string,
@@ -78,6 +93,13 @@ async function getConnection(
   return connection;
 }
 
+/**
+ * Resets the database.
+ *
+ * @param spinner Spinner.
+ * @param connection Connection.
+ * @param useMigrations Use migrations.
+ */
 async function reset(
   spinner: ora.Ora,
   connection: Connection,
@@ -104,6 +126,13 @@ async function reset(
   spinner.succeed('Database reset complete');
 }
 
+/**
+ * Installs a list of bundles.
+ *
+ * @param spinner Spinner.
+ * @param connection Connection.
+ * @param bundles Bundles to install.
+ */
 async function installBundles(
   spinner: ora.Ora,
   connection: Connection,
@@ -118,6 +147,12 @@ async function installBundles(
   }
 }
 
+/**
+ * "install" command action.
+ *
+ * @param pattern
+ * @param options
+ */
 async function action(
   pattern = './fixtures/**/*.bundle.ts',
   options: InstallCommand,
