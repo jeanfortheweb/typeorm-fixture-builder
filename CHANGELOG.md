@@ -1,3 +1,64 @@
+# [2.0.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.4...v2.0.0) (2020-02-23)
+
+
+### Breaking
+
+* Version 2.0 ([b0c4251](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/b0c4251f02793065a973a1b75bb6e91d419e89a2))
+
+### Build
+
+* Exclude scenario folder from tests ([4ae1191](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/4ae11919212b38d030e908e4615a093c64e7aecc))
+* Rebuild before release ([7642d61](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/7642d61fb658c72c83fd5a594df41e3da7b3b12d))
+
+### Chore
+
+* Add CLI E2E tests ([72cb43e](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/72cb43e17ae171d75f7fc426faeb699f56ca70f2))
+* Add eslint, husky ([c708041](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/c708041fd784128ff9a7ea78faf12ca9e37634d7))
+* Do not build on install step ([cd067e7](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/cd067e7d7c973d8810ed99f32936a03f606dc8ea))
+* Prettier adjustments ([547fb14](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/547fb1412d7e2730f1840685bccc43718d3b431f))
+* Reduce complexity of collect code ([0660ee1](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/0660ee1ada53d3852f273edaaec19b4c7d7bfd2b))
+* Refactor cli code into several functions ([6f2caec](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/6f2caec390af79f8bdde836ebdac2df1903010c6))
+* Remove help text tests ([3a8e2cc](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/3a8e2cc7badddf384fa78415715ac7402dc5a0da))
+* Remove obsolete snapshots ([e7b2455](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/e7b245525104e4f3f9f86655a5a0ff9f571fa1f5))
+* Remove snapshots for stderr ([cdd0b34](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/cdd0b3442f669aeeeda19cdb6aa5bdfd32dce83b))
+* Remove unused import ([8469f81](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/8469f8175fe3106d1dd33333ab3b04896ab85424))
+
+### Docs
+
+* Add code docs ([b8fa113](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/b8fa1138a80d4a87965d8dd31ee37c15aa177d4d))
+* Markdown changes ([79eff3e](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/79eff3ee223f44f18436400feb0326b7058c60f0))
+* Remove notice about alternatives ([9dfa842](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/9dfa842e5fac11f24d81dc2f6d7f92733b9f5e62))
+* Update Part I ([5d5dae7](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/5d5dae7ee52da365d57fcf062ea45d7dfc05a622))
+
+### New
+
+* 2.0 Base ([e712652](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/e7126528fd271b91fa70f74c708ec0ba328f892f))
+* Add generics to collect and install ([7a1cf84](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/7a1cf843d23d34ea32e584f21b7d8b2eb3ffce80))
+* Add resolvers, overall improvements ([974807d](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/974807da3fd7fe028a3bac8706da14d376ca8f03))
+* Installation is now transactional ([728a0f9](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/728a0f94e74513b1ed36c63c169a5a73e98428a0))
+
+## [1.0.4](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.3...v1.0.4) (2020-01-14)
+
+
+### Fix
+
+* Duplicate entitiy creation on foreign builder ([3c80a72](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/3c80a7221a5bd0161b8b3e0961a823196d8e7f59))
+
+### Upgrade
+
+* Bump npm from 6.12.0 to 6.13.4 ([281a57f](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/281a57f5f6f1e3ec57fc2d4bf40e7704ebb04ae1))
+
+## [1.0.3](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.2...v1.0.3) (2019-12-11)
+
+
+### Docs
+
+* Update docs ([6bda38d](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/6bda38d360168cd72d3cfd436b5bd77cdb2d5ab3))
+
+### Fix
+
+* Force exit code 0 ([65c44d2](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/65c44d2d576cc91e6c8fc895d9b0706e337c88bb))
+
 ## [1.0.2](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.1...v1.0.2) (2019-10-19)
 
 
