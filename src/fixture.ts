@@ -1,16 +1,16 @@
 import { DeepPartial } from "typeorm";
-
-export interface Fixture {
-  __persisted: boolean;
-}
+import { setPersisted, setResolver } from "./reflect";
+import { Resolver } from "./resolve";
 
 export function fixture<Entity extends {}>(
   entity: new () => Entity,
-  data: DeepPartial<Entity>
-): Entity & Fixture {
+  data: DeepPartial<Entity>,
+  resolver?: Resolver<Entity>
+): Entity {
   const instance = new entity();
 
-  return Object.assign(instance, data, {
-    __persisted: false
-  });
+  setPersisted(instance, false);
+  setResolver(instance, resolver);
+
+  return Object.assign(instance, data);
 }

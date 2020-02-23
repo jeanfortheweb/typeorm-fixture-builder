@@ -1,4 +1,4 @@
-import { Fixture } from "./fixture";
+import { isFixture } from "./reflect";
 
 /**
  * Collects fixtures from an array type.
@@ -6,7 +6,7 @@ import { Fixture } from "./fixture";
  * @param value Array.
  */
 function collectArray(value: any[]) {
-  return value.reduce<Fixture[]>(
+  return value.reduce<any[]>(
     (fixtures, element) => [...fixtures, ...collect(element)],
     []
   );
@@ -18,10 +18,10 @@ function collectArray(value: any[]) {
  * @param value Object.
  */
 function collectObject(value: any) {
-  if (typeof value.__persisted === "boolean") {
+  if (isFixture(value)) {
     return [value];
   } else {
-    return Object.values(value).reduce<Fixture[]>(
+    return Object.values(value).reduce<any[]>(
       (fixtures, element) => [...fixtures, ...collect(element)],
       []
     );
@@ -35,7 +35,7 @@ function collectObject(value: any) {
  *
  * @param value Object or Array to collect from.
  */
-export function collect(value: any): Fixture[] {
+export function collect(value: any): any[] {
   if (value && Array.isArray(value)) {
     return collectArray(value);
   }

@@ -4,7 +4,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  OneToMany
 } from "typeorm";
 import { Group } from "./group";
 import { Profile } from "./profile";

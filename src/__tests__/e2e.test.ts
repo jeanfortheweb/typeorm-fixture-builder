@@ -4,6 +4,9 @@ import { User } from "./entities/user";
 import { install } from "../install";
 import { collect } from "../collect";
 import { Profile } from "./entities/profile";
+import { isPersisted } from "../reflect";
+import { fixture } from "../fixture";
+import { Picture } from "./entities/picture";
 
 let connection: Connection;
 
@@ -11,7 +14,7 @@ beforeAll(async () => {
   connection = await createConnection({
     type: "sqlite",
     database: "./test.db",
-    entities: [Group, User, Profile],
+    entities: [Group, User, Profile, Picture],
     synchronize: true
   });
 });
@@ -45,7 +48,7 @@ describe("scenarios", () => {
     for (const [group, fixtures] of Object.entries(fixturesByType)) {
       for (const fixture of fixtures) {
         expect(fixture.id).toBeDefined();
-        expect(fixture.__persisted).toEqual(true);
+        expect(isPersisted(fixture)).toEqual(true);
       }
 
       expect(await connection.getRepository(group).count()).toEqual(
@@ -58,5 +61,73 @@ describe("scenarios", () => {
     expect(() =>
       collect(require("./scenarios/invalid/invalid.bundle"))
     ).toThrow("Invalid fixture definition.");
+  });
+});
+
+describe("resolve", () => {
+  it("should use and merge resolved entity", async () => {
+    const resolver = jest.fn((repository, { firstName }) =>
+      repository
+        .createQueryBuilder("user")
+        .where("user.firstName = :firstName", { firstName })
+    );
+
+    const user1 = fixture(
+      User,
+      { firstName: "Foo", lastName: "Bar" },
+      resolver
+    );
+    const user2 = fixture(
+      User,
+      { firstName: "Foo", lastName: "Baz" },
+      resolver
+    );
+
+    await install(connection, [user1, user2]);
+
+    expect(resolver).toHaveBeenCalledTimes(2);
+    expect(await connection.getRepository(User).count()).toEqual(1);
+    expect(await connection.getRepository(User).findOne()).toEqual({
+      id: 1,
+      firstName: "Foo",
+      lastName: "Baz"
+    });
+  });
+
+  it("should use fixture when no entity is resolved", async () => {
+    const resolver = jest.fn(repository =>
+      repository
+        .createQueryBuilder("user")
+        .where("user.firstName = :firstName", { firstName: "Baz" })
+    );
+
+    const user1 = fixture(
+      User,
+      { firstName: "Foo", lastName: "Bar" },
+      resolver
+    );
+
+    const user2 = fixture(
+      User,
+      { firstName: "Foo", lastName: "Baz" },
+      resolver
+    );
+
+    await install(connection, [user1, user2]);
+
+    expect(resolver).toHaveBeenCalledTimes(2);
+    expect(await connection.getRepository(User).count()).toEqual(2);
+    expect(await connection.getRepository(User).find()).toEqual([
+      {
+        id: 1,
+        firstName: "Foo",
+        lastName: "Bar"
+      },
+      {
+        id: 2,
+        firstName: "Foo",
+        lastName: "Baz"
+      }
+    ]);
   });
 });

@@ -7,7 +7,6 @@ import { createConnection, Connection, ConnectionOptionsReader } from "typeorm";
 import ora from "ora";
 import { collect } from "./collect";
 import { install } from "./install";
-import { Fixture } from "./fixture";
 
 program
   .command("install [pattern]")
@@ -43,7 +42,7 @@ program
       const bundles = sync(pattern, {
         cwd: process.cwd(),
         absolute: true
-      }).map<[string, Fixture[]]>(file => {
+      }).map<[string, any[]]>(file => {
         try {
           return [relative(process.cwd(), file), collect(require(file))];
         } catch (error) {
