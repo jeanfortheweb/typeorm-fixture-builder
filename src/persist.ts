@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Connection, EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { isPersisted, setPersisted } from './reflect';
 import { resolve } from './resolve';
 
