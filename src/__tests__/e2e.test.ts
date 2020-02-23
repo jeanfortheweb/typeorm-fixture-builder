@@ -164,10 +164,9 @@ describe("cli", () => {
       {}
     );
 
-    const { code, stderr } = await run(".", ["install", "-r", scenario]);
+    const { code } = await run(".", ["install", "-r", scenario]);
 
     expect(code).toEqual(0);
-    expect(stderr).toMatchSnapshot();
 
     for (const [group, fixtures] of Object.entries(fixturesByType)) {
       expect(await connection.getRepository(group).count()).toEqual(
@@ -186,7 +185,6 @@ describe("cli", () => {
     const { code, stderr } = await run(".", ["install", "-r", scenario]);
 
     expect(code).toEqual(1);
-    expect(stderr).toMatchSnapshot();
   }, 20000);
 
   interface Result {
