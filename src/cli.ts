@@ -2,24 +2,26 @@
 import "ts-node/register";
 import program, { Command } from "commander";
 import { sync } from "glob";
-import { Builder } from "./builder";
 import { relative } from "path";
 import { createConnection, Connection, ConnectionOptionsReader } from "typeorm";
 import ora from "ora";
+import { collect } from "./collect";
+import { install } from "./install";
+import { Fixture } from "./fixture";
 
 program
   .command("install [pattern]")
   .description(
-    'Load fixtures into database. Pattern is optional and can be a glob pattern. [default: "fixtures/**/*.fixture.ts"['
+    'Load fixtures into database. Pattern is optional and can be a glob pattern. [default: "fixtures/**/*.bundle.ts"'
   )
-
   .option(
     "-r, --reset-database",
     "Drops and synchronizes the database before loading fixtures"
   )
   .option(
     "-c, --connection",
-    'Name of connection to use. Check the typeorm documentation for further information. [default: "default"]'
+    'Name of connection to use. Check the typeorm documentation for further information. [default: "default"]',
+    "default"
   )
   .option(
     "-m, --use-migrations",
@@ -27,7 +29,7 @@ program
   )
   .action(
     async (
-      pattern: string = "./fixtures/**/*.fixture.ts",
+      pattern: string = "./fixtures/**/*.bundle.ts",
       {
         connection: connectionName = "default",
         resetDatabase,
@@ -36,33 +38,33 @@ program
     ) => {
       const spinner = ora("");
 
-      spinner.start("Gathering fixture builders");
+      spinner.start("Collecting fixtures from bundles");
 
-      const builders = sync(pattern, {
+      const bundles = sync(pattern, {
         cwd: process.cwd(),
         absolute: true
-      }).map<[string, Builder]>(file => {
+      }).map<[string, Fixture[]]>(file => {
         try {
-          const builder = require(file).default;
-
-          if (builder === undefined || typeof builder.build !== "function") {
-            throw new Error("Expected builder instance as default export");
-          }
-
-          return [relative(process.cwd(), file), builder];
+          return [relative(process.cwd(), file), collect(require(file))];
         } catch (error) {
           spinner.fail(
-            `Failed to load fixture file at: ${relative(
-              process.cwd(),
-              file
-            )}: ${error.message}`
+            `Failed to load bundle file at: ${relative(process.cwd(), file)}: ${
+              error.message
+            }`
           );
 
           return process.exit(1);
         }
       });
 
-      spinner.succeed(`Found ${builders.length} fixture builders`);
+      const count = bundles.reduce(
+        (count, fixtures) => (count += fixtures.length),
+        0
+      );
+
+      spinner.succeed(
+        `Found ${bundles.length} fixture bundles with a total of ${count} fixtures`
+      );
 
       let connection: Connection;
 
@@ -88,15 +90,15 @@ program
 
       if (resetDatabase === true) {
         try {
-          if (useMigrations === true) {
-            spinner.start("Dropping and migrating database");
+          await connection.dropDatabase();
 
-            await connection.dropDatabase();
+          if (useMigrations === true) {
+            spinner.start("Migrating database");
+
             await connection.runMigrations();
           } else {
-            spinner.start("Dropping and synchronizing database");
+            spinner.start("Synchronizing database");
 
-            await connection.dropDatabase();
             await connection.synchronize();
           }
         } catch (error) {
@@ -108,10 +110,10 @@ program
         spinner.succeed("Database reset complete");
       }
 
-      for (const [path, builder] of builders) {
+      for (const [path, fixtures] of bundles) {
         spinner.start(path);
 
-        await builder.install(connection.manager);
+        await install(connection, fixtures);
 
         spinner.succeed(path);
       }
