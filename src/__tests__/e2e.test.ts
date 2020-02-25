@@ -177,31 +177,58 @@ describe('cli', () => {
     expect((await run('.', ['-p', 'parameter'])).code).toEqual(1);
   });
 
-  it('should successfully install a bundle', async () => {
-    const scenario = resolve(__dirname, './scenarios/simple/simple.bundle.ts');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const fixtures = collect(require(scenario)) as any[];
-    const fixturesByType = fixtures.reduce<{ [key: string]: any[] }>(
-      (grouped, fixture) => ({
-        ...grouped,
-        [fixture.constructor.name]: [
-          ...(grouped[fixture.constructor.name] || []),
-          fixture
-        ]
-      }),
-      {}
-    );
 
-    const { code } = await run('.', ['install', '-r', scenario]);
+  describe('with simple bundle setup', () => {
+    let scenario: string;
+    let fixtures;
+    let fixturesByType: object;
 
-    expect(code).toEqual(0);
-
-    for (const [group, fixtures] of Object.entries(fixturesByType)) {
-      expect(await connection.getRepository(group).count()).toEqual(
-        fixtures.length
+    beforeEach(() => {
+      scenario = resolve(__dirname, './scenarios/simple/simple.bundle.ts');
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      fixtures = collect(require(scenario)) as any[];
+      fixturesByType = fixtures.reduce<{ [key: string]: any[] }>(
+        (grouped, fixture) => ({
+          ...grouped,
+          [fixture.constructor.name]: [
+            ...(grouped[fixture.constructor.name] || []),
+            fixture
+          ]
+        }),
+        {}
       );
-    }
-  }, 20000);
+    });
+
+    it('should successfully install a bundle', async () => {
+      const { code } = await run('.', ['install', '-r', scenario]);
+
+      expect(code).toEqual(0);
+  
+      for (const [group, fixtures] of Object.entries(fixturesByType)) {
+        expect(await connection.getRepository(group).count()).toEqual(
+          fixtures.length
+        );
+      }
+    }, 20000);
+
+    it('should successfully install when using the connection arg', async () => {
+      const { code } = await run('.', ['install', '-c', 'default', scenario]);
+
+      expect(code).toEqual(0);
+  
+      for (const [group, fixtures] of Object.entries(fixturesByType)) {
+        expect(await connection.getRepository(group).count()).toEqual(
+          fixtures.length
+        );
+      }
+    }, 20000);
+
+    it('should fail when using a bad connection', async () => {
+      const { code } = await run('.', ['install', '-c', 'wrong', scenario]);
+
+      expect(code).toEqual(1);
+    }, 20000);
+  });
 
   it('should fail on an invalid bundle', async () => {
     const scenario = resolve(
