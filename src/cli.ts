@@ -187,7 +187,7 @@ program
     'Drops and synchronizes the database before loading fixtures',
   )
   .option(
-    '-c, --connection',
+    '-c, --connection <name>',
     'Name of connection to use. Check the typeorm documentation for further information. [default: "default"]',
     'default',
   )
