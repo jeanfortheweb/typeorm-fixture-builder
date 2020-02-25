@@ -1,3 +1,14 @@
+## [2.0.1](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.0...v2.0.1) (2020-02-25)
+
+
+### Chore
+
+* Reset version number ([e0d5910](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/e0d59100b67e910ef3240eb9a2ec97fe5d1557b1))
+
+### Fix
+
+* Allow passing in connection names ([c10660a](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/c10660a5bd886d15cdaa7a2c2e22a3957ff53a07))
+
 # [2.0.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v1.0.4...v2.0.0) (2020-02-23)
 
 
