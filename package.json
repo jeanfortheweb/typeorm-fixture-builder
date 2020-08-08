@@ -8,6 +8,9 @@
     "name": "Jean-Pascal 'Johnny' Hövel",
     "email": "jeanfortheweb@gmail.com"
   },
+  "publishConfig": {
+    "tag": "latest"
+  },
   "keywords": [
     "typeorm",
     "typescript",
