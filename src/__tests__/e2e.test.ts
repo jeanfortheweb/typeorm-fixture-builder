@@ -21,7 +21,7 @@ interface Result {
 const executable = resolve(__dirname, '..', '..', 'bin', './cli.js');
 
 function run(cwd: string, args: string[]): Promise<Result> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     exec(
       `node ${executable} ${args.join(' ')}`,
       { cwd },
@@ -30,9 +30,9 @@ function run(cwd: string, args: string[]): Promise<Result> {
           code: error && error.code ? error.code : 0,
           error,
           stdout,
-          stderr
+          stderr,
         });
-      }
+      },
     );
   });
 }
@@ -46,7 +46,7 @@ beforeEach(async () => {
     database,
     entities: [Group, User, Profile, Picture],
     dropSchema: true,
-    synchronize: true
+    synchronize: true,
   });
 });
 
@@ -70,10 +70,10 @@ describe('install', () => {
         ...grouped,
         [fixture.constructor.name]: [
           ...(grouped[fixture.constructor.name] || []),
-          fixture
-        ]
+          fixture,
+        ],
       }),
-      {}
+      {},
     );
 
     await install(connection, fixtures);
@@ -85,7 +85,7 @@ describe('install', () => {
       }
 
       expect(await connection.getRepository(group).count()).toEqual(
-        fixtures.length
+        fixtures.length,
       );
     }
   });
@@ -93,7 +93,7 @@ describe('install', () => {
   it('should fail on invalid bundle', () => {
     expect(() =>
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      collect(require('./scenarios/invalid/invalid.bundle'))
+      collect(require('./scenarios/invalid/invalid.bundle')),
     ).toThrow('Invalid fixture definition.');
   });
 
@@ -102,18 +102,18 @@ describe('install', () => {
       const resolver = jest.fn((repository, { firstName }) =>
         repository
           .createQueryBuilder('user')
-          .where('user.firstName = :firstName', { firstName })
+          .where('user.firstName = :firstName', { firstName }),
       );
 
       const user1 = fixture(
         User,
         { firstName: 'Foo', lastName: 'Bar' },
-        resolver
+        resolver,
       );
       const user2 = fixture(
         User,
         { firstName: 'Foo', lastName: 'Baz' },
-        resolver
+        resolver,
       );
 
       await install(connection, [user1, user2]);
@@ -123,27 +123,27 @@ describe('install', () => {
       expect(await connection.getRepository(User).findOne()).toEqual({
         id: 1,
         firstName: 'Foo',
-        lastName: 'Baz'
+        lastName: 'Baz',
       });
     });
 
     it('should use fixture when no entity is resolved', async () => {
-      const resolver = jest.fn(repository =>
+      const resolver = jest.fn((repository) =>
         repository
           .createQueryBuilder('user')
-          .where('user.firstName = :firstName', { firstName: 'Baz' })
+          .where('user.firstName = :firstName', { firstName: 'Baz' }),
       );
 
       const user1 = fixture(
         User,
         { firstName: 'Foo', lastName: 'Bar' },
-        resolver
+        resolver,
       );
 
       const user2 = fixture(
         User,
         { firstName: 'Foo', lastName: 'Baz' },
-        resolver
+        resolver,
       );
 
       await install(connection, [user1, user2]);
@@ -154,22 +154,22 @@ describe('install', () => {
         {
           id: 1,
           firstName: 'Foo',
-          lastName: 'Bar'
+          lastName: 'Bar',
         },
         {
           id: 2,
           firstName: 'Foo',
-          lastName: 'Baz'
-        }
+          lastName: 'Baz',
+        },
       ]);
     });
   });
 });
 
 describe('cli', () => {
-  beforeAll(done => {
+  beforeAll((done) => {
     exec('yarn compile:test', { cwd: dirname(dirname(__dirname)) }, () =>
-      done()
+      done(),
     );
   }, 20000);
 
@@ -177,11 +177,10 @@ describe('cli', () => {
     expect((await run('.', ['-p', 'parameter'])).code).toEqual(1);
   });
 
-
   describe('with simple bundle setup', () => {
     let scenario: string;
     let fixtures;
-    let fixturesByType: object;
+    let fixturesByType: Record<string, Record<string, any>>;
 
     beforeEach(() => {
       scenario = resolve(__dirname, './scenarios/simple/simple.bundle.ts');
@@ -192,10 +191,10 @@ describe('cli', () => {
           ...grouped,
           [fixture.constructor.name]: [
             ...(grouped[fixture.constructor.name] || []),
-            fixture
-          ]
+            fixture,
+          ],
         }),
-        {}
+        {},
       );
     });
 
@@ -203,10 +202,10 @@ describe('cli', () => {
       const { code } = await run('.', ['install', '-r', scenario]);
 
       expect(code).toEqual(0);
-  
+
       for (const [group, fixtures] of Object.entries(fixturesByType)) {
         expect(await connection.getRepository(group).count()).toEqual(
-          fixtures.length
+          fixtures.length,
         );
       }
     }, 20000);
@@ -215,10 +214,10 @@ describe('cli', () => {
       const { code } = await run('.', ['install', '-c', 'default', scenario]);
 
       expect(code).toEqual(0);
-  
+
       for (const [group, fixtures] of Object.entries(fixturesByType)) {
         expect(await connection.getRepository(group).count()).toEqual(
-          fixtures.length
+          fixtures.length,
         );
       }
     }, 20000);
@@ -233,7 +232,7 @@ describe('cli', () => {
   it('should fail on an invalid bundle', async () => {
     const scenario = resolve(
       __dirname,
-      './scenarios/invalid/invalid.bundle.ts'
+      './scenarios/invalid/invalid.bundle.ts',
     );
     const { code } = await run('.', ['install', '-r', scenario]);
 
