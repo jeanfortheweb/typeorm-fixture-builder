@@ -10,7 +10,7 @@ import { getResolver } from './reflect';
 /**
  * Defines a resolver callback.
  */
-export interface Resolver<Entity extends {} = any> {
+export interface Resolver<Entity extends Record<string, any> = any> {
   (
     repository: Repository<Entity>,
     values: DeepPartial<Entity>,
@@ -27,9 +27,9 @@ export interface Resolver<Entity extends {} = any> {
  */
 export async function resolve(
   manager: EntityManager,
-  fixture: any,
+  fixture: Record<string, any>,
 ): Promise<any> {
-  const repository = manager.getRepository(fixture.constructor);
+  const repository = manager.getRepository<any>(fixture.constructor);
   const resolver = getResolver(fixture);
 
   if (resolver !== undefined) {
