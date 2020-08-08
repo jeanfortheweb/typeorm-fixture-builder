@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.2...v2.0.3) (2020-08-08)
+
+
+### Fix
+
+* Add explicit dist tag ([20e88fa](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/20e88fad7a46c2445d631306b4c9a6d24ed64459))
+
 ## [2.0.2](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.1...v2.0.2) (2020-08-08)
 
 
