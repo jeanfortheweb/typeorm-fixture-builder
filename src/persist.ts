@@ -91,7 +91,7 @@ async function persistEntity(
  */
 export async function persist(
   manager: EntityManager,
-  fixture: Record<string, unknown>,
+  fixture: Record<string, any>,
 ): Promise<any> {
   if (isPersisted(fixture) === false) {
     await persistRelations(manager, fixture);
