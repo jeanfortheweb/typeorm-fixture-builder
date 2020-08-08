@@ -76,7 +76,7 @@ async function persistRelations(
  */
 async function persistEntity(
   manager: EntityManager,
-  fixture: any,
+  fixture: Record<string, unknown>,
 ): Promise<void> {
   return manager
     .getRepository(fixture.constructor)
@@ -91,7 +91,7 @@ async function persistEntity(
  */
 export async function persist(
   manager: EntityManager,
-  fixture: any,
+  fixture: Record<string, unknown>,
 ): Promise<any> {
   if (isPersisted(fixture) === false) {
     await persistRelations(manager, fixture);
