@@ -1,3 +1,18 @@
+## [2.0.4](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.3...v2.0.4) (2021-04-07)
+
+
+### Docs
+
+* Include npx Usage in README.md ([adad6df](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/adad6dfb9b14189f8f2f90b91d25582e573a2ee9))
+
+### Fix
+
+* Husky 6 related Changes ([7a06395](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/7a06395dd4ec373c5e6640eb8dea6e5dda13c26e))
+
+### Upgrade
+
+* Bump Dependencies ([bfd61b8](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/bfd61b8bee37c908873786e071ddb7de5eeecad5))
+
 ## [2.0.3](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.2...v2.0.3) (2020-08-08)
 
 
