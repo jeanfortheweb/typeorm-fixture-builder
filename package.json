@@ -29,7 +29,8 @@
   "scripts": {
     "compile:cjs": "rm -rf lib/cjs && tsc --p tsconfig.cjs.json",
     "compile:esm": "rm -rf lib/esm && tsc --p tsconfig.esm.json",
-    "compile:test": "rm -rf lib/cjs && tsc --p tsconfig.test.json"
+    "compile:test": "rm -rf lib/cjs && tsc --p tsconfig.test.json",
+    "prepare": "husky install"
   },
   "jest": {
     "preset": "ts-jest",
@@ -44,42 +45,35 @@
       "/__tests__/"
     ]
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "eslint . --ext .ts,.tsx",
-      "pre-push": "yarn tsc --noEmit"
-    }
-  },
   "dependencies": {
-    "commander": "^6.0.0",
+    "commander": "^7.2.0",
     "glob": "^7.1.4",
-    "ora": "^5.0.0",
-    "ts-node": "^8.10.2"
+    "ora": "^5.4.0",
+    "ts-node": "^9.1.1"
   },
   "peerDependencies": {
-    "typeorm": "^0.2.18",
-    "typescript": "^3.5.3"
+    "typeorm": "^0.2.32",
+    "typescript": "^4.2.3"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
-    "@semantic-release/release-notes-generator": "semantic-release/release-notes-generator",
+    "@semantic-release/release-notes-generator": "^9.0.2",
     "@types/glob": "^7.1.3",
-    "@types/jest": "^26.0.9",
+    "@types/jest": "^26.0.22",
     "@types/ora": "^3.2.0",
-    "@typescript-eslint/eslint-plugin": "^3.8.0",
-    "@typescript-eslint/parser": "^3.8.0",
-    "commitlint": "^9.1.0",
-    "conventional-changelog-eslint": "^3.0.8",
-    "eslint": "^7.6.0",
-    "husky": "^4.2.5",
-    "jest": "^26.2.2",
-    "prettier": "^2.0.5",
-    "semantic-release": "^17.1.1",
-    "sqlite3": "^5.0.0",
-    "ts-jest": "^26.1.4",
-    "typeorm": "^0.2.25",
-    "typescript": "^3.9.7"
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
+    "commitlint": "^12.1.1",
+    "conventional-changelog-eslint": "^3.0.9",
+    "eslint": "^7.23.0",
+    "husky": "^6.0.0",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "semantic-release": "^17.4.2",
+    "sqlite3": "^5.0.2",
+    "ts-jest": "^26.5.4",
+    "typeorm": "^0.2.32",
+    "typescript": "^4.2.3"
   }
 }

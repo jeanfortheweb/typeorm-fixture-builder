@@ -33,7 +33,6 @@ Therefore, we are able to create typesafe fixture definitions.
 By default, the CLI will look for a `fixtures` folder, scanning for all files with a `.bundle.ts` suffix:
 
 ```ts
-// fixtures/users.bundle.ts
 import { fixture } from 'typeorm-fixture-builder';
 import { User } from '../entities/user.entity';
 
@@ -51,14 +50,23 @@ export const user2 = fixture(User, {
 Now you can run these fixtures using the CLI:
 
 ```sh
+# yarn
 yarn fixtures install
+
+# npm/npx
+npx fixtures install
 ```
 
 For more CLI options checkout
 
 ```sh
+# yarn
 yarn fixtures --help
 yarn fixtures install --help
+
+# npm/npx
+npx fixtures --help
+npx fixtures install --help
 ```
 
 # Fixture Bundle Files
@@ -74,38 +82,38 @@ The following rules apply to exports from bundle files:
 
 1. The export is a fixture itself:
 
-      ```ts
-      import { fixture } from 'typeorm-fixture-builder';
-      import { User } from '../entities/User.entity';
+   ```ts
+   import { fixture } from 'typeorm-fixture-builder';
+   import { User } from '../entities/User.entity';
 
-      export const user = fixture(User, { firstName: 'Foo' });
-      ```
+   export const user = fixture(User, { firstName: 'Foo' });
+   ```
 
 2. The export is an array of fixtures:
 
-      ```ts
-      import { fixture } from 'typeorm-fixture-builder';
-      import { User } from '../entities/User.entity';
+   ```ts
+   import { fixture } from 'typeorm-fixture-builder';
+   import { User } from '../entities/User.entity';
 
-      export const users = [
-        fixture(User, { firstName: 'Foo' }),
-        fixture(User, { firstName: 'Bar' }),
-        fixture(User, { firstName: 'Baz' }),
-      ];
-      ```
+   export const users = [
+     fixture(User, { firstName: 'Foo' }),
+     fixture(User, { firstName: 'Bar' }),
+     fixture(User, { firstName: 'Baz' }),
+   ];
+   ```
 
 3. The export is an Object where the property values are fixtures:
 
-      ```ts
-      import { fixture } from 'typeorm-fixture-builder';
-      import { User } from '../entities/User.entity';
+   ```ts
+   import { fixture } from 'typeorm-fixture-builder';
+   import { User } from '../entities/User.entity';
 
-      export const users = {
-        foo: fixture(User, { firstName: 'Foo' }),
-        bar: fixture(User, { firstName: 'Bar' }),
-        baz: fixture(User, { firstName: 'Baz' }),
-      };
-      ```
+   export const users = {
+     foo: fixture(User, { firstName: 'Foo' }),
+     bar: fixture(User, { firstName: 'Bar' }),
+     baz: fixture(User, { firstName: 'Baz' }),
+   };
+   ```
 
 These rules can be combined to allow deeper nested structures:
 
@@ -165,7 +173,6 @@ export const users = {
 It's absolutely safe to use fixtures from foreign bundle files:
 
 ```ts
-// fixtures/groups.bundle.ts
 import { fixture } from 'typeorm-fixture-builder';
 import { Group } from '../entities/group.entity';
 
@@ -176,7 +183,6 @@ export const groups = {
 ```
 
 ```ts
-// fixtures/users.bundle.ts
 import { fixture } from 'typeorm-fixture-builder';
 import { User } from '../entities/user.entity';
 import { groups } from './groups.bundle';
@@ -198,9 +204,6 @@ You could even define your fixtures, or functions that will create fixtures
 in non bundle files. It's only important that all your intended fixtures are exported from a bundle file in the end:
 
 ```ts
-// fixtures/helpers.ts
-// this file will not be scanned by the cli, because it does not match
-// .bundle.ts
 import { fixture } from 'typeorm-fixture-builder';
 import faker from 'faker';
 import { groups } from './groups.bundle';
@@ -209,17 +212,16 @@ export function createRandomUser(): User {
   return fixture(User, {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    groups: [faker.random.arrayElement(groups)]
-  })
+    groups: [faker.random.arrayElement(groups)],
+  });
 }
 
 export function createRandomUsers(count: number): User[] {
-  return new Array(count).map(createRandomUser(()))
+  return [...new Array(count)].map(createRandomUser);
 }
 ```
 
 ```ts
-// fixtures/users.bundle.ts
 import { builder } from 'typeorm-fixture-builder';
 import { User } from '../entities/user.entity';
 import { createRandomUsers } from './helpers.ts';
@@ -249,8 +251,6 @@ export const user = fixture(
   User,
   { firstName: 'Foo', lastName: 'Bar' },
 
-  // use an user entity where firstName = Foo if it exists,
-  // otherwise persist a new user entity.
   (respository, values) =>
     repository
       .createQueryBuilder('user')
