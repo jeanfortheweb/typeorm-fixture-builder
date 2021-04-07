@@ -45,13 +45,6 @@
       "/__tests__/"
     ]
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "eslint . --ext .ts,.tsx",
-      "pre-push": "yarn tsc --noEmit"
-    }
-  },
   "dependencies": {
     "commander": "^7.2.0",
     "glob": "^7.1.4",
@@ -59,8 +52,8 @@
     "ts-node": "^9.1.1"
   },
   "peerDependencies": {
-    "typeorm": "^0.2.18",
-    "typescript": "^3.5.3"
+    "typeorm": "^0.2.32",
+    "typescript": "^4.2.3"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
