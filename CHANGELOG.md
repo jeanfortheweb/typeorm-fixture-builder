@@ -1,3 +1,25 @@
+## [2.0.3](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.2...v2.0.3) (2020-08-08)
+
+
+### Fix
+
+* Add explicit dist tag ([20e88fa](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/20e88fad7a46c2445d631306b4c9a6d24ed64459))
+
+## [2.0.2](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.1...v2.0.2) (2020-08-08)
+
+
+### Chore
+
+* Type changes ([138ffcb](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/138ffcb1e710a091bd80cba35aad946ef11c7680))
+
+### Fix
+
+* TypeScript issue on install function ([b1db3f2](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/b1db3f269e36a0a6e82db8d49ada6b3775a0c24c))
+
+### Upgrade
+
+* Dependency Upgrades ([d80197d](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/d80197dd5d8ea5ae869ee0dbc2c44931d871628f))
+
 ## [2.0.1](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.0...v2.0.1) (2020-02-25)
 
 
