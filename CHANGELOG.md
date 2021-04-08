@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.4...v2.1.0) (2021-04-08)
+
+
+### New
+
+* Ink CLI renderer plus --silent option ([4640f93](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/4640f93c7bae3b439083e4f5068162ce63a723fa))
+
 ## [2.0.4](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.3...v2.0.4) (2021-04-07)
 
 
