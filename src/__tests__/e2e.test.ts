@@ -21,7 +21,7 @@ interface Result {
 const executable = resolve(__dirname, '..', '..', 'bin', './cli.js');
 
 function run(cwd: string, args: string[]): Promise<Result> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     exec(
       `node ${executable} ${args.join(' ')}`,
       { cwd },
@@ -97,6 +97,19 @@ describe('install', () => {
     ).toThrow('Invalid fixture definition.');
   });
 
+  it('should accept an install callback', async () => {
+    const fixtures = collect(
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('./scenarios/simple/simple.bundle'),
+    ) as any[];
+
+    const callback = jest.fn();
+
+    await install(connection, fixtures, callback);
+
+    expect(callback).toHaveBeenCalledTimes(fixtures.length);
+  });
+
   describe('resolve', () => {
     it('should use and merge resolved entity', async () => {
       const resolver = jest.fn((repository, { firstName }) =>
@@ -128,7 +141,7 @@ describe('install', () => {
     });
 
     it('should use fixture when no entity is resolved', async () => {
-      const resolver = jest.fn((repository) =>
+      const resolver = jest.fn(repository =>
         repository
           .createQueryBuilder('user')
           .where('user.firstName = :firstName', { firstName: 'Baz' }),
@@ -167,7 +180,7 @@ describe('install', () => {
 });
 
 describe('cli', () => {
-  beforeAll((done) => {
+  beforeAll(done => {
     exec('yarn compile:test', { cwd: dirname(dirname(__dirname)) }, () =>
       done(),
     );
@@ -227,6 +240,25 @@ describe('cli', () => {
 
       expect(code).toEqual(1);
     }, 20000);
+
+    it('should not generate console output with --silent option', async () => {
+      const { code, stdout } = await run('.', [
+        'install',
+        '-r',
+        '-s',
+        scenario,
+      ]);
+
+      expect(code).toEqual(0);
+      expect(stdout.trim().length).toEqual(0);
+    }, 20000);
+
+    it('should generate console output without --silent option', async () => {
+      const { code, stdout } = await run('.', ['install', '-r', scenario]);
+
+      expect(code).toEqual(0);
+      expect(stdout.trim().length).toBeGreaterThan(0);
+    }, 20000);
   });
 
   it('should fail on an invalid bundle', async () => {
@@ -237,5 +269,17 @@ describe('cli', () => {
     const { code } = await run('.', ['install', '-r', scenario]);
 
     expect(code).toEqual(1);
+  }, 20000);
+
+  it('should generate console output with --silent option when errors present', async () => {
+    const scenario = resolve(
+      __dirname,
+      './scenarios/invalid/invalid.bundle.ts',
+    );
+
+    const { code, stdout } = await run('.', ['install', '-r', '-s', scenario]);
+
+    expect(code).toEqual(1);
+    expect(stdout.trim().length).toBeGreaterThan(0);
   }, 20000);
 });

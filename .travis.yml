@@ -19,7 +19,7 @@ install:
 jobs:
   include:
     - stage: test
-      if: tag IS blank and branch != next
+      if: tag IS blank and branch != next and type = pull_request
       before_script:
         - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         - chmod +x ./cc-test-reporter
