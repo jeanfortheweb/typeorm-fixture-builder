@@ -5,11 +5,11 @@ import { User } from './entities/user';
 import { install } from '../install';
 import { collect } from '../collect';
 import { Profile } from './entities/profile';
-import { isPersisted } from '../reflect';
 import { fixture } from '../fixture';
 import { Picture } from './entities/picture';
 import { dirname, resolve } from 'path';
 import { exec } from 'child_process';
+import { clear } from '../persist';
 
 interface Result {
   code?: number;
@@ -54,14 +54,16 @@ afterEach(async () => {
   if (connection && connection.isConnected) {
     await connection.close();
   }
+
+  clear();
 });
 
 describe('install', () => {
   it.each`
     scenario
-    ${'./scenarios/simple/simple.bundle.ts'}
     ${'./scenarios/complex/complex.bundle.ts'}
     ${'./scenarios/imports/imports.bundle.ts'}
+    ${'./scenarios/simple/simple.bundle.ts'}
   `('should successfully complete scenario $scenario', async ({ scenario }) => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fixtures = collect(require(scenario)) as any[];
@@ -81,7 +83,6 @@ describe('install', () => {
     for (const [group, fixtures] of Object.entries(fixturesByType)) {
       for (const fixture of fixtures) {
         expect(fixture.id).toBeDefined();
-        expect(isPersisted(fixture)).toEqual(true);
       }
 
       expect(await connection.getRepository(group).count()).toEqual(
@@ -108,6 +109,27 @@ describe('install', () => {
     await install(connection, fixtures, callback);
 
     expect(callback).toHaveBeenCalledTimes(fixtures.length);
+  });
+
+  it('should allow to reset persistence cache', async () => {
+    const fixtures = collect(
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('./scenarios/complex/complex.bundle'),
+    ) as any[];
+
+    await install(connection, fixtures, (_, skipped) => {
+      expect(skipped).toEqual(false);
+    });
+
+    await install(connection, fixtures, (_, skipped) => {
+      expect(skipped).toEqual(true);
+    });
+
+    clear();
+
+    await install(connection, fixtures, (_, skipped) => {
+      expect(skipped).toEqual(false);
+    });
   });
 
   describe('resolve', () => {

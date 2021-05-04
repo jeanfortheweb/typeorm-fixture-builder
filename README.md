@@ -13,6 +13,7 @@
 - [Foreign Bundle Files and Helpers](#foreign-bundle-files-and-helpers)
 - [Soft Fixture Creation / Resolvers](#soft-fixture-creation--resolvers)
 - [Programmatic Usage](#programmatic-usage)
+- [Clearing the persistence cache](#clearing-the-persistence-cache)
 
 # Installation
 
@@ -316,4 +317,28 @@ async function installFixtures() {
 }
 
 installFixtures();
+```
+
+# Clearing the Persistence Cache
+
+Internally, the library will cache every fixture it has already persisted.
+This can become quite cumbersome, for example when you're using fixtures in end to end
+testing scenarios which wants to redeploy fixtures frequently in one process.
+
+To overcome this, you can use the `clear` function before calling `install` again, which will clear the internal caching, allowing fixtures to be persisted again:
+
+```ts
+import { collect, install, clear } from 'typeorm-fixture-builder';
+import { createConnection } from 'typeorm';
+import UserBundle from '../fixtures/user.bundle';
+
+beforeEach(async () => {
+  await install(await createConnection(), collect(UserBundle));
+});
+
+afterEach(() => {
+  clear();
+});
+
+// your tests using fixtures...
 ```
