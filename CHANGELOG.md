@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.2.0...v2.2.1) (2021-05-04)
+
+
+### Fix
+
+* Actually export the new clear api ([e3c0e9c](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/e3c0e9c1b5564751812bc15025a59efac364a6ca))
+
 # [2.2.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.1.0...v2.2.0) (2021-05-04)
 
 
