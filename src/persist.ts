@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EntityManager } from 'typeorm';
-import { isPersisted, setPersisted } from './reflect';
 import { resolve } from './resolve';
+
+const persisted = new Set();
 
 /**
  * Persists an array relation (many-to-many, one-to-many)
@@ -18,10 +19,7 @@ async function persistManyRelation(
   propertyName: string,
 ): Promise<void> {
   for (const index in fixture[propertyName] || []) {
-    fixture[propertyName][index] = await persist(
-      manager,
-      fixture[propertyName][index],
-    );
+    await persist(manager, fixture[propertyName][index]);
   }
 }
 
@@ -38,7 +36,7 @@ async function persistOneRelation(
   propertyName: string,
 ): Promise<void> {
   if (fixture[propertyName]) {
-    fixture[propertyName] = await persist(manager, fixture[propertyName]);
+    await persist(manager, fixture[propertyName]);
   }
 }
 
@@ -75,7 +73,7 @@ async function persistRelations(
  * @param manager EntityManager.
  * @param fixture Fixture.
  */
-async function persistEntity(
+export async function persistEntity(
   manager: EntityManager,
   fixture: Record<string, unknown>,
 ): Promise<void> {
@@ -93,13 +91,22 @@ async function persistEntity(
 export async function persist(
   manager: EntityManager,
   fixture: Record<string, any>,
-): Promise<any> {
-  if (isPersisted(fixture) === false) {
+): Promise<boolean> {
+  if (persisted.has(fixture) === false) {
     await persistRelations(manager, fixture);
     await persistEntity(manager, fixture);
 
-    setPersisted(fixture, true);
+    persisted.add(fixture);
+
+    return false;
   }
 
-  return fixture;
+  return true;
+}
+
+/**
+ * Clears the internal persistence cache.
+ */
+export function clear() {
+  persisted.clear();
 }

@@ -13,6 +13,7 @@
 - [Foreign Bundle Files and Helpers](#foreign-bundle-files-and-helpers)
 - [Soft Fixture Creation / Resolvers](#soft-fixture-creation--resolvers)
 - [Programmatic Usage](#programmatic-usage)
+- [Clearing the persistence cache](#clearing-the-persistence-cache)
 
 # Installation
 
@@ -155,17 +156,17 @@ export const groups = {
   customers: fixture(Group, { name: 'Customers' }),
 };
 
-export const users = {
-  exampleAdministrator: fixture(User, {
+export const users = [
+  fixture(User, {
     firstName: 'Admin',
     groups: [groups.administrators],
   }),
 
-  exampleCustomer: fixture(User, {
+  fixture(User, {
     firstName: 'Customer',
     groups: [groups.customers],
   }),
-};
+];
 ```
 
 # Foreign Bundle Files and Helpers
@@ -173,31 +174,29 @@ export const users = {
 It's absolutely safe to use fixtures from foreign bundle files:
 
 ```ts
+// fixtures/groups.bundle.ts
 import { fixture } from 'typeorm-fixture-builder';
 import { Group } from '../entities/group.entity';
 
-export const groups = {
-  administrators: fixture(Group, { name: 'Administrators' }),
-  customers: fixture(Group, { name: 'Customers' }),
-};
+export const administrators: fixture(Group, { name: 'Administrators' });
+export const customers: fixture(Group, { name: 'Customers' });
 ```
 
 ```ts
+// fixtures/users.bundle.ts
 import { fixture } from 'typeorm-fixture-builder';
 import { User } from '../entities/user.entity';
-import { groups } from './groups.bundle';
+import { administrators, customers } from './groups.bundle';
 
-export const users = {
-  exampleAdministrator: fixture(User, {
-    firstName: 'Admin',
-    groups: [groups.administrators],
-  }),
+export const administrator = fixture(User, {
+  firstName: 'Admin',
+  groups: [administrators],
+});
 
-  exampleCustomer: fixture(User, {
-    firstName: 'Customer',
-    groups: [groups.customers],
-  }),
-};
+export const customer = fixture(User, {
+  firstName: 'Customer',
+  groups: [customers],
+});
 ```
 
 You could even define your fixtures, or functions that will create fixtures
@@ -250,11 +249,10 @@ import { User } from '../entities/user.entity';
 export const user = fixture(
   User,
   { firstName: 'Foo', lastName: 'Bar' },
-
-  (respository, values) =>
+  (respository, { firstName }) =>
     repository
       .createQueryBuilder('user')
-      .where('user.firstName = :firstName', { firstName: values.firstName }),
+      .where('user.firstName = :firstName', { firstName }),
 );
 ```
 
@@ -265,15 +263,15 @@ import { fixture } from 'typeorm-fixture-builder';
 import { DeepPartial } from 'typeorm';
 import { User } from '../entities/user.entity';
 
-function createSoftUserFixture(data: DeepPartial<User>) {
-  return fixture(User, data, (respository, values) =>
+function createOrUpdateUser(data: DeepPartial<User>) {
+  return fixture(User, data, (respository, { firstName }) =>
     repository
       .createQueryBuilder('user')
-      .where('user.firstName = :firstName', { firstName: values.firstName }),
+      .where('user.firstName = :firstName', { firstName }),
   );
 }
 
-export const user = createSoftUserFixture({
+export const user = createOrUpdateUser({
   firstName: 'Foo',
   lastName: 'Bar',
 });
@@ -301,8 +299,7 @@ export const user2 = fixture(User, {
 });
 
 async function installFixtures() {
-  const connection = await createConnection();
-  await install(connection, [user1, user2]);
+  await install(await createConnection(), [user1, user2]);
 }
 
 installFixtures();
@@ -311,14 +308,37 @@ installFixtures();
 You can also import and collect fixtures from bundle files. Import and use the `collect` function. Pass the imported bundle module and it will return an array of collected fixtures:
 
 ```ts
-import { fixture, collect, install } from 'typeorm-fixture-builder';
+import { collect, install } from 'typeorm-fixture-builder';
 import { createConnection } from 'typeorm';
 import UserBundle from '../fixtures/user.bundle';
 
 async function installFixtures() {
-  const connection = await createConnection();
-  await install(connection, collect(UserBundle));
+  await install(await createConnection(), collect(UserBundle));
 }
 
 installFixtures();
+```
+
+# Clearing the Persistence Cache
+
+Internally, the library will cache every fixture it has already persisted.
+This can become quite cumbersome, for example when you're using fixtures in end to end
+testing scenarios which wants to redeploy fixtures frequently in one process.
+
+To overcome this, you can use the `clear` function before calling `install` again, which will clear the internal caching, allowing fixtures to be persisted again:
+
+```ts
+import { collect, install, clear } from 'typeorm-fixture-builder';
+import { createConnection } from 'typeorm';
+import UserBundle from '../fixtures/user.bundle';
+
+beforeEach(async () => {
+  await install(await createConnection(), collect(UserBundle));
+});
+
+afterEach(() => {
+  clear();
+});
+
+// your tests using fixtures...
 ```

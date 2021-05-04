@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Connection } from 'typeorm';
 import { persist } from './persist';
-import { isPersisted } from './reflect';
 
 /**
  * Called after each pesist call to inform about the installation progress.
@@ -30,11 +29,7 @@ export async function install<Entity>(
 ): Promise<void> {
   await connection.transaction(async manager => {
     for (const fixture of fixtures) {
-      if (isPersisted(fixture) === false) {
-        callback(await persist(manager, fixture), false);
-      } else {
-        callback(fixture, true);
-      }
+      callback(fixture, await persist(manager, fixture));
     }
   });
 }

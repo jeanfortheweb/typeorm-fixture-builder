@@ -1,5 +1,5 @@
 import { DeepPartial } from 'typeorm';
-import { setPersisted, setResolver } from './reflect';
+import { setResolver } from './reflect';
 import { Resolver } from './resolve';
 
 /**
@@ -17,7 +17,6 @@ export function fixture<Entity extends Record<string, any>>(
 ): Entity {
   const instance = new entity();
 
-  setPersisted(instance, false);
   setResolver(instance, resolver);
 
   return Object.assign(instance, data);
