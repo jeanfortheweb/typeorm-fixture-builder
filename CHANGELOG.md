@@ -1,3 +1,14 @@
+# [2.2.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.1.0...v2.2.0) (2021-05-04)
+
+
+### Docs
+
+* Minor README.md improvements ([11ac00d](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/11ac00d93913e0434cf786194d98152d2a7219e6))
+
+### New
+
+* Cache Clearing ([35fa8a6](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/35fa8a60cef7e8c662786798b2d72928fd0e9bcd))
+
 # [2.1.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.0.4...v2.1.0) (2021-04-08)
 
 
