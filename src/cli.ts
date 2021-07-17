@@ -4,6 +4,7 @@
 
 import program from 'commander';
 import 'ts-node/register';
+import 'tsconfig-paths/register';
 import { execute } from './cli/executor';
 
 /**
