@@ -249,7 +249,7 @@ import { User } from '../entities/user.entity';
 export const user = fixture(
   User,
   { firstName: 'Foo', lastName: 'Bar' },
-  (respository, { firstName }) =>
+  (repository, { firstName }) =>
     repository
       .createQueryBuilder('user')
       .where('user.firstName = :firstName', { firstName }),
@@ -264,7 +264,7 @@ import { DeepPartial } from 'typeorm';
 import { User } from '../entities/user.entity';
 
 function createOrUpdateUser(data: DeepPartial<User>) {
-  return fixture(User, data, (respository, { firstName }) =>
+  return fixture(User, data, (repository, { firstName }) =>
     repository
       .createQueryBuilder('user')
       .where('user.firstName = :firstName', { firstName }),
