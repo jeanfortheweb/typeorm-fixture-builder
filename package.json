@@ -1,7 +1,7 @@
 {
   "name": "typeorm-fixture-builder",
   "description": "Painless and type safe data fixtures for typeorm",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "license": "MIT",
   "repository": "github:jeanfortheweb/typeorm-fixture-builder",
   "author": {

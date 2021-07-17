@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.2.1...v2.2.2) (2021-07-17)
+
+
+### Fix
+
+* Add tsconfig-paths module to cli ([029635d](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/029635db5f6b146c00efd81484fff49ee24eee7b))
+
 ## [2.2.1](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.2.0...v2.2.1) (2021-05-04)
 
 
