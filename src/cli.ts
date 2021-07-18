@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import program from 'commander';
+import { program } from 'commander';
 import 'ts-node/register';
 import 'tsconfig-paths/register';
 import { execute } from './cli/executor';
