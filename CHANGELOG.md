@@ -1,3 +1,14 @@
+## [2.2.3](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.2.2...v2.2.3) (2021-07-18)
+
+
+### Fix
+
+* Typings after commander upgrade ([23cbb98](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/23cbb984fc97825a98263ada4aef0d1eb99b0dee))
+
+### Upgrade
+
+* Overall dependency upgrades ([6af9029](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/6af9029439aa202833ecfb7f5c0e1ef6e18ef7ea))
+
 ## [2.2.2](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.2.1...v2.2.2) (2021-07-17)
 
 
