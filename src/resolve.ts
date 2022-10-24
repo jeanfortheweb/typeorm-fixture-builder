@@ -39,6 +39,9 @@ export async function resolve(
       fixture = repository.merge(resolved, fixture);
     }
   }
-
+  const id = repository.getId(fixture);
+  if(id){
+    return {...fixture, ...id}
+  }
   return fixture;
 }
