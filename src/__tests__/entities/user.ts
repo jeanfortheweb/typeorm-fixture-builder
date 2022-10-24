@@ -4,10 +4,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
-  JoinColumn
+  JoinColumn, OneToMany,
 } from 'typeorm';
 import { Group } from './group';
 import { Profile } from './profile';
+import { Project } from './project';
 
 @Entity()
 export class User {
@@ -32,4 +33,7 @@ export class User {
   )
   @JoinColumn()
   profile: Profile;
+
+  @OneToMany(() => Project, (project) => project.user)
+  projects: Project[];
 }

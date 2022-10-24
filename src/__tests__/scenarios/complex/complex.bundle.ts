@@ -1,8 +1,8 @@
-import { Group } from "../../entities/group";
-import { User } from "../../entities/user";
-import { Profile } from "../../entities/profile";
-import { fixture } from "../../../fixture";
-import { Picture } from "../../entities/picture";
+import { Group } from '../../entities/group';
+import { User } from '../../entities/user';
+import { Profile } from '../../entities/profile';
+import { fixture } from '../../../fixture';
+import { Picture } from '../../entities/picture';
 
 export const picture1 = fixture(Picture, { file: "baz.jpg" });
 export const picture2 = fixture(Picture, { file: "foo.jpg" });
@@ -34,3 +34,4 @@ export const nested = {
     }
   }
 };
+

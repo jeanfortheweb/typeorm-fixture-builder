@@ -1,6 +1,8 @@
-import { Group } from "../../entities/group";
-import { User } from "../../entities/user";
-import { fixture } from "../../../fixture";
+import { Group } from '../../entities/group';
+import { User } from '../../entities/user';
+import { fixture } from '../../../fixture';
+import { Project } from '../../entities/project';
+import { Picture } from '../../entities/picture';
 
 export const group1 = fixture(Group, { name: "Group 1" });
 
@@ -16,3 +18,8 @@ export const user2 = fixture(User, {
 });
 
 export const group2 = fixture(Group, { name: "Group 2", users: [user2] });
+
+export const project = fixture(Project, {
+  user: user1,
+  picture: fixture(Picture, { file: "pic.jpg" })
+});

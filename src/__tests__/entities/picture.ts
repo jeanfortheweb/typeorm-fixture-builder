@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { Profile } from "./profile";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Profile } from './profile';
+import { Project } from './project';
 
 @Entity()
 export class Picture {
@@ -14,4 +15,7 @@ export class Picture {
     profile => profile.pictures
   )
   profile: Profile;
+
+  @OneToMany(() => Project, (project) => project.picture)
+  projects: Project[];
 }

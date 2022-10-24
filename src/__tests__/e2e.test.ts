@@ -10,6 +10,7 @@ import { Picture } from './entities/picture';
 import { dirname, resolve } from 'path';
 import { exec } from 'child_process';
 import { clear } from '../persist';
+import { Project } from './entities/project';
 
 interface Result {
   code?: number;
@@ -44,7 +45,7 @@ beforeEach(async () => {
   connection = await createConnection({
     type: 'sqlite',
     database,
-    entities: [Group, User, Profile, Picture],
+    entities: [Group, User, Profile, Picture, Project],
     dropSchema: true,
     synchronize: true,
   });
@@ -82,9 +83,10 @@ describe('install', () => {
 
     for (const [group, fixtures] of Object.entries(fixturesByType)) {
       for (const fixture of fixtures) {
-        expect(fixture.id).toBeDefined();
+        if(group != 'Project') {
+          expect(fixture.id).toBeDefined();
+        }
       }
-
       expect(await connection.getRepository(group).count()).toEqual(
         fixtures.length,
       );
