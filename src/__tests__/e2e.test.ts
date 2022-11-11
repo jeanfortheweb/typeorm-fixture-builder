@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createConnection, Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Group } from './entities/group';
 import { User } from './entities/user';
 import { install } from '../install';
@@ -37,22 +37,23 @@ function run(cwd: string, args: string[]): Promise<Result> {
   });
 }
 
-let connection: Connection;
+let dataSource: DataSource;
 const database = resolve(__dirname, '..', '..', 'test.db');
 
 beforeEach(async () => {
-  connection = await createConnection({
+  dataSource = new DataSource({
     type: 'sqlite',
     database,
     entities: [Group, User, Profile, Picture],
     dropSchema: true,
     synchronize: true,
   });
+  await dataSource.initialize()
 });
 
 afterEach(async () => {
-  if (connection && connection.isConnected) {
-    await connection.close();
+  if (dataSource && dataSource.isInitialized) {
+    await dataSource.destroy();
   }
 
   clear();
@@ -67,25 +68,23 @@ describe('install', () => {
   `('should successfully complete scenario $scenario', async ({ scenario }) => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fixtures = collect(require(scenario)) as any[];
-    const fixturesByType = fixtures.reduce<{ [key: string]: any[] }>(
-      (grouped, fixture) => ({
-        ...grouped,
-        [fixture.constructor.name]: [
-          ...(grouped[fixture.constructor.name] || []),
-          fixture,
-        ],
-      }),
-      {},
-    );
+    const fixturesByType = new Map<any, any>()
+    for (const fixture of fixtures) {
+      const array = fixturesByType.get(fixture.constructor) ?? [];
+      if (!array.includes(fixture)) {
+        array.push(fixture);
+      }
+      fixturesByType.set(fixture.constructor, array)
+    }
 
-    await install(connection, fixtures);
+    await install(dataSource, fixtures);
 
-    for (const [group, fixtures] of Object.entries(fixturesByType)) {
+    for (const [group, fixtures] of Array.from(fixturesByType.entries())) {
       for (const fixture of fixtures) {
         expect(fixture.id).toBeDefined();
       }
 
-      expect(await connection.getRepository(group).count()).toEqual(
+      expect(await dataSource.getRepository(group).count()).toEqual(
         fixtures.length,
       );
     }
@@ -106,7 +105,7 @@ describe('install', () => {
 
     const callback = jest.fn();
 
-    await install(connection, fixtures, callback);
+    await install(dataSource, fixtures, callback);
 
     expect(callback).toHaveBeenCalledTimes(fixtures.length);
   });
@@ -117,17 +116,17 @@ describe('install', () => {
       require('./scenarios/complex/complex.bundle'),
     ) as any[];
 
-    await install(connection, fixtures, (_, skipped) => {
+    await install(dataSource, fixtures, (_, skipped) => {
       expect(skipped).toEqual(false);
     });
 
-    await install(connection, fixtures, (_, skipped) => {
+    await install(dataSource, fixtures, (_, skipped) => {
       expect(skipped).toEqual(true);
     });
 
     clear();
 
-    await install(connection, fixtures, (_, skipped) => {
+    await install(dataSource, fixtures, (_, skipped) => {
       expect(skipped).toEqual(false);
     });
   });
@@ -151,11 +150,11 @@ describe('install', () => {
         resolver,
       );
 
-      await install(connection, [user1, user2]);
+      await install(dataSource, [user1, user2]);
 
       expect(resolver).toHaveBeenCalledTimes(2);
-      expect(await connection.getRepository(User).count()).toEqual(1);
-      expect(await connection.getRepository(User).findOne()).toEqual({
+      expect(await dataSource.getRepository(User).count()).toEqual(1);
+      expect(await dataSource.getRepository(User).findOneBy({})).toEqual({
         id: 1,
         firstName: 'Foo',
         lastName: 'Baz',
@@ -181,11 +180,11 @@ describe('install', () => {
         resolver,
       );
 
-      await install(connection, [user1, user2]);
+      await install(dataSource, [user1, user2]);
 
       expect(resolver).toHaveBeenCalledTimes(2);
-      expect(await connection.getRepository(User).count()).toEqual(2);
-      expect(await connection.getRepository(User).find()).toEqual([
+      expect(await dataSource.getRepository(User).count()).toEqual(2);
+      expect(await dataSource.getRepository(User).find()).toEqual([
         {
           id: 1,
           firstName: 'Foo',
@@ -215,22 +214,19 @@ describe('cli', () => {
   describe('with simple bundle setup', () => {
     let scenario: string;
     let fixtures;
-    let fixturesByType: Record<string, Record<string, any>>;
+    const fixturesByType = new Map<any, any>()
 
     beforeEach(() => {
       scenario = resolve(__dirname, './scenarios/simple/simple.bundle.ts');
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       fixtures = collect(require(scenario)) as any[];
-      fixturesByType = fixtures.reduce<{ [key: string]: any[] }>(
-        (grouped, fixture) => ({
-          ...grouped,
-          [fixture.constructor.name]: [
-            ...(grouped[fixture.constructor.name] || []),
-            fixture,
-          ],
-        }),
-        {},
-      );
+      for (const fixture of fixtures) {
+        const array = fixturesByType.get(fixture.constructor) ?? [];
+        if (!array.includes(fixture)) {
+          array.push(fixture);
+        }
+        fixturesByType.set(fixture.constructor, array)
+      }
     });
 
     it('should successfully install a bundle', async () => {
@@ -238,8 +234,8 @@ describe('cli', () => {
 
       expect(code).toEqual(0);
 
-      for (const [group, fixtures] of Object.entries(fixturesByType)) {
-        expect(await connection.getRepository(group).count()).toEqual(
+      for (const [group, fixtures] of Array.from(fixturesByType.entries())) {
+        expect(await dataSource.getRepository(group).count()).toEqual(
           fixtures.length,
         );
       }
@@ -250,8 +246,8 @@ describe('cli', () => {
 
       expect(code).toEqual(0);
 
-      for (const [group, fixtures] of Object.entries(fixturesByType)) {
-        expect(await connection.getRepository(group).count()).toEqual(
+      for (const [group, fixtures] of Array.from(fixturesByType.entries())) {
+        expect(await dataSource.getRepository(group).count()).toEqual(
           fixtures.length,
         );
       }

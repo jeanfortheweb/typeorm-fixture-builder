@@ -281,11 +281,11 @@ Such functions could also be placed in some kind of non bundle helper files, of 
 
 # Programmatic Usage
 
-If you just want to install some fixtures programmatically, you can import and use the `install` function. It takes a TypeORM connection and an array of fixtures:
+If you just want to install some fixtures programmatically, you can import and use the `install` function. It takes a TypeORM data source and an array of fixtures:
 
 ```ts
 import { fixture, install } from 'typeorm-fixture-builder';
-import { createConnection } from 'typeorm';
+import { dataSource } from '../db';
 import { User } from '../entities/user.entity';
 
 export const user1 = fixture(User, {
@@ -299,7 +299,7 @@ export const user2 = fixture(User, {
 });
 
 async function installFixtures() {
-  await install(await createConnection(), [user1, user2]);
+  await install(dataSource, [user1, user2]);
 }
 
 installFixtures();
@@ -309,11 +309,11 @@ You can also import and collect fixtures from bundle files. Import and use the `
 
 ```ts
 import { collect, install } from 'typeorm-fixture-builder';
-import { createConnection } from 'typeorm';
+import { dataSource } from '../db';
 import UserBundle from '../fixtures/user.bundle';
 
 async function installFixtures() {
-  await install(await createConnection(), collect(UserBundle));
+  await install(dataSource, collect(UserBundle));
 }
 
 installFixtures();
@@ -329,11 +329,11 @@ To overcome this, you can use the `clear` function before calling `install` agai
 
 ```ts
 import { collect, install, clear } from 'typeorm-fixture-builder';
-import { createConnection } from 'typeorm';
+import { dataSource } from '../db';
 import UserBundle from '../fixtures/user.bundle';
 
 beforeEach(async () => {
-  await install(await createConnection(), collect(UserBundle));
+  await install(dataSource, collect(UserBundle));
 });
 
 afterEach(() => {

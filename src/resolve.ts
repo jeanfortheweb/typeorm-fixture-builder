@@ -35,7 +35,7 @@ export async function resolve(
   if (resolver !== undefined) {
     const resolved = await resolver(repository, fixture).getOne();
 
-    if (resolved !== undefined) {
+    if (resolved !== null) {
       fixture = repository.merge(resolved, fixture);
     }
   }

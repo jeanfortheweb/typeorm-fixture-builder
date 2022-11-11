@@ -23,7 +23,7 @@ export interface ExecutorProps {
 const Executor: ComponentType<ExecutorProps> = props => {
   const [infos, setInfos] = useState<InfoOptions[]>([]);
   const [status, setStatus] = useState<string | false>('');
-  const [exception, setException] = useState<Error>();
+  const [exception, setException] = useState<unknown>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const contextRef = useRef<Context>({ fixtures: {}, connection: null as any });
 
