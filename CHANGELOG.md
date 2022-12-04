@@ -1,3 +1,16 @@
+# [3.0.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.2.3...v3.0.0) (2022-12-04)
+
+
+### Breaking
+
+* Typeorm 0.3 Support ([de17f74](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/de17f74d1b4b8dc34a2f1f1c153d9b1352b896be))
+
+### Chore
+
+* Set travis node version to 17 ([a715842](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/a715842f69c4ce255a31bbee5ee02d8759cb0c25))
+* Upgrade travis node version to 18 ([d702846](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/d7028468854027695bbdcc7eb229536bde944de6))
+* Use dist focal for travis ([2a08926](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/2a08926cf56fd3c08b51ecbd52c7a36069a684d1))
+
 ## [2.2.3](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.2.2...v2.2.3) (2021-07-18)
 
 
