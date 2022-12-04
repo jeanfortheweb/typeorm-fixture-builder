@@ -1,7 +1,8 @@
 if: tag IS blank
 language: node_js
+dist: focal
 node_js:
-  - 18
+  - 'lts/*'
 
 cache:
   yarn: true
