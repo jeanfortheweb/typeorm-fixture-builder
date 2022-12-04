@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createConnection, Connection } from 'typeorm';
-import { Group } from './entities/group';
-import { User } from './entities/user';
-import { install } from '../install';
-import { collect } from '../collect';
-import { Profile } from './entities/profile';
-import { fixture } from '../fixture';
-import { Picture } from './entities/picture';
-import { dirname, resolve } from 'path';
 import { exec } from 'child_process';
+import { dirname, resolve } from 'path';
+import { DataSource } from 'typeorm';
+import { collect } from '../collect';
+import { fixture } from '../fixture';
+import { install } from '../install';
 import { clear } from '../persist';
+import { Group } from './entities/group';
+import { Picture } from './entities/picture';
+import { Profile } from './entities/profile';
+import { User } from './entities/user';
 
 interface Result {
   code?: number;
@@ -37,23 +37,23 @@ function run(cwd: string, args: string[]): Promise<Result> {
   });
 }
 
-let connection: Connection;
+let source: DataSource;
 const database = resolve(__dirname, '..', '..', 'test.db');
 
 beforeEach(async () => {
-  connection = await createConnection({
+  source = new DataSource({
     type: 'sqlite',
     database,
     entities: [Group, User, Profile, Picture],
     dropSchema: true,
     synchronize: true,
   });
+
+  await source.initialize();
 });
 
 afterEach(async () => {
-  if (connection && connection.isConnected) {
-    await connection.close();
-  }
+  await source.destroy();
 
   clear();
 });
@@ -78,14 +78,14 @@ describe('install', () => {
       {},
     );
 
-    await install(connection, fixtures);
+    await install(source, fixtures);
 
     for (const [group, fixtures] of Object.entries(fixturesByType)) {
       for (const fixture of fixtures) {
         expect(fixture.id).toBeDefined();
       }
 
-      expect(await connection.getRepository(group).count()).toEqual(
+      expect(await source.getRepository(group).count()).toEqual(
         fixtures.length,
       );
     }
@@ -106,7 +106,7 @@ describe('install', () => {
 
     const callback = jest.fn();
 
-    await install(connection, fixtures, callback);
+    await install(source, fixtures, callback);
 
     expect(callback).toHaveBeenCalledTimes(fixtures.length);
   });
@@ -117,17 +117,17 @@ describe('install', () => {
       require('./scenarios/complex/complex.bundle'),
     ) as any[];
 
-    await install(connection, fixtures, (_, skipped) => {
+    await install(source, fixtures, (_, skipped) => {
       expect(skipped).toEqual(false);
     });
 
-    await install(connection, fixtures, (_, skipped) => {
+    await install(source, fixtures, (_, skipped) => {
       expect(skipped).toEqual(true);
     });
 
     clear();
 
-    await install(connection, fixtures, (_, skipped) => {
+    await install(source, fixtures, (_, skipped) => {
       expect(skipped).toEqual(false);
     });
   });
@@ -145,17 +145,22 @@ describe('install', () => {
         { firstName: 'Foo', lastName: 'Bar' },
         resolver,
       );
+
       const user2 = fixture(
         User,
         { firstName: 'Foo', lastName: 'Baz' },
         resolver,
       );
 
-      await install(connection, [user1, user2]);
+      await install(source, [user1, user2]);
 
       expect(resolver).toHaveBeenCalledTimes(2);
-      expect(await connection.getRepository(User).count()).toEqual(1);
-      expect(await connection.getRepository(User).findOne()).toEqual({
+      expect(await source.getRepository(User).count()).toEqual(1);
+      expect(
+        await source
+          .getRepository(User)
+          .findOne({ where: { firstName: 'Foo' } }),
+      ).toEqual({
         id: 1,
         firstName: 'Foo',
         lastName: 'Baz',
@@ -181,11 +186,11 @@ describe('install', () => {
         resolver,
       );
 
-      await install(connection, [user1, user2]);
+      await install(source, [user1, user2]);
 
       expect(resolver).toHaveBeenCalledTimes(2);
-      expect(await connection.getRepository(User).count()).toEqual(2);
-      expect(await connection.getRepository(User).find()).toEqual([
+      expect(await source.getRepository(User).count()).toEqual(2);
+      expect(await source.getRepository(User).find()).toEqual([
         {
           id: 1,
           firstName: 'Foo',
@@ -239,7 +244,7 @@ describe('cli', () => {
       expect(code).toEqual(0);
 
       for (const [group, fixtures] of Object.entries(fixturesByType)) {
-        expect(await connection.getRepository(group).count()).toEqual(
+        expect(await source.getRepository(group).count()).toEqual(
           fixtures.length,
         );
       }
@@ -251,7 +256,7 @@ describe('cli', () => {
       expect(code).toEqual(0);
 
       for (const [group, fixtures] of Object.entries(fixturesByType)) {
-        expect(await connection.getRepository(group).count()).toEqual(
+        expect(await source.getRepository(group).count()).toEqual(
           fixtures.length,
         );
       }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityManager } from 'typeorm';
+import { EntityManager, ObjectLiteral } from 'typeorm';
 import { resolve } from './resolve';
 
 const persisted = new Set();
@@ -88,9 +88,9 @@ export async function persistEntity(
  * @param manager EntityManager.
  * @param fixture Fixture.
  */
-export async function persist(
+export async function persist<Entity extends ObjectLiteral>(
   manager: EntityManager,
-  fixture: Record<string, any>,
+  fixture: Entity,
 ): Promise<boolean> {
   if (persisted.has(fixture) === false) {
     await persistRelations(manager, fixture);
