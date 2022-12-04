@@ -42,7 +42,7 @@ const Executor: ComponentType<ExecutorProps> = props => {
         });
       }
     } catch (error) {
-      setException(error);
+      setException(error as Error);
     }
   }, []);
 
