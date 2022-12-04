@@ -31,11 +31,10 @@ export async function resolve(
 ): Promise<any> {
   const repository = manager.getRepository<any>(fixture.constructor);
   const resolver = getResolver(fixture);
-
   if (resolver !== undefined) {
     const resolved = await resolver(repository, fixture).getOne();
 
-    if (resolved !== undefined) {
+    if (resolved !== null) {
       fixture = repository.merge(resolved, fixture);
     }
   }

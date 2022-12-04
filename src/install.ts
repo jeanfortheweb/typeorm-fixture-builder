@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Connection } from 'typeorm';
+import { DataSource, ObjectLiteral } from 'typeorm';
 import { persist } from './persist';
 
 /**
@@ -14,20 +14,20 @@ const defaultCallback: InstallCallback<any> = () => {
 };
 
 /**
- * Uses the given connection to install an array of fixtures.
+ * Uses the given DataSource to install an array of fixtures.
  * Fixtures have to be defined by using the `fixture` function.
  *
  * @see fixture
- * @param connection Connection.
+ * @param source DataSource.
  * @param fixtures Array of fixtures.
  * @param callback Called after each installed fixture
  */
-export async function install<Entity>(
-  connection: Connection,
+export async function install<Entity extends ObjectLiteral>(
+  source: DataSource,
   fixtures: Entity[],
   callback: InstallCallback<Entity> = defaultCallback,
 ): Promise<void> {
-  await connection.transaction(async manager => {
+  await source.transaction(async manager => {
     for (const fixture of fixtures) {
       callback(fixture, await persist(manager, fixture));
     }
