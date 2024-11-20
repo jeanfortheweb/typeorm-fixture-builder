@@ -10,9 +10,9 @@ import { Resolver } from './resolve';
  * @param resolver Custom entity resolver.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function fixture<Entity extends Record<string, any>>(
-  entity: new () => Entity,
-  data: DeepPartial<Entity>,
+export function fixture<Entity extends new () => any>(
+  entity: Entity,
+  data: DeepPartial<InstanceType<Entity>>,
   resolver?: Resolver<Entity>,
 ): Entity {
   const instance = new entity();
