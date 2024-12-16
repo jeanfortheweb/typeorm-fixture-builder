@@ -13,7 +13,7 @@ import { Resolver } from './resolve';
 export function fixture<Entity extends new () => any>(
   entity: Entity,
   data: DeepPartial<InstanceType<Entity>>,
-  resolver?: Resolver<Entity>,
+  resolver?: Resolver<InstanceType<Entity>>,
 ): Entity {
   const instance = new entity();
 
