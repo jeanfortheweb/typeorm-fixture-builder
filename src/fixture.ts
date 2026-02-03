@@ -14,7 +14,7 @@ export function fixture<Entity extends new () => any>(
   entity: Entity,
   data: DeepPartial<InstanceType<Entity>>,
   resolver?: Resolver<InstanceType<Entity>>,
-): Entity {
+): InstanceType<Entity> {
   const instance = new entity();
 
   setResolver(instance, resolver);

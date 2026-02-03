@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - next
+    tags-ignore:
+      - "**"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'pull_request' && github.base_ref != 'next' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Download Code Climate test reporter
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+
+      - name: Code Climate before-build
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: ./cc-test-reporter before-build
+
+      - name: Run tests
+        run: yarn jest --coverage
+
+      - name: Code Climate after-build + upload
+        if: always()
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          ./cc-test-reporter after-build --exit-code ${{ job.status == 'success' && 0 || 1 }}
+          ./cc-test-reporter format-coverage -t lcov ./coverage/lcov.info
+          ./cc-test-reporter upload-coverage
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/next' }}
+    permissions:
+      contents: write   
+      issues: write     
+      pull-requests: write
+    steps:
+      - name: Checkout (full history for semantic-release)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "yarn"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Configure git identity
+        run: |
+          git config user.email "${{ secrets.GITHUB_EMAIL || format('{0}@users.noreply.github.com', github.actor) }}"
+          git config user.name "${{ secrets.GITHUB_USER || github.actor }}"
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        run: |
+          yarn compile:cjs
+          yarn compile:esm
+
+      - name: Release (semantic-release)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn semantic-release
+
+      - name: Push back to repo (if semantic-release wrote commits)
+        run: git push
