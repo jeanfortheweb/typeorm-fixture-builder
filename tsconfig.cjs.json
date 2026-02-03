@@ -3,8 +3,9 @@
   "compilerOptions": {
     "outDir": "lib/cjs",
     "module": "commonjs",
+    "target": "es2015",
     "moduleResolution": "node",
-    "declaration": true
+    "declaration": true,
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["lib/**", "**/__tests__/**"]
