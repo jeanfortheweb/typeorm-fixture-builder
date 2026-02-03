@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v3.0.0...v3.0.1) (2024-11-20)
+
+
+### Fix
+
+* Better generics for fixture function ([f1f25a6](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/f1f25a60c0498ac12b24382051294478069091ac))
+
 # [3.0.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v2.2.3...v3.0.0) (2022-12-04)
 
 
