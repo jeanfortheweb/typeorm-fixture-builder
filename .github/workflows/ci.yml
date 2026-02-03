@@ -84,10 +84,17 @@ jobs:
           yarn compile:cjs
           yarn compile:esm
 
+      - name: Check token is present
+        run: |
+          if [ -z "${NPM_TOKEN}" ]; then echo "NPM_TOKEN is empty" && exit 1; else echo "NPM_TOKEN is set"; fi
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Release (semantic-release)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn semantic-release
 
       - name: Push back to repo (if semantic-release wrote commits)
