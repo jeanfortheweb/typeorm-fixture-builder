@@ -1,3 +1,16 @@
+# [4.0.0](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v3.0.1...v4.0.0) (2026-02-03)
+
+
+### Breaking
+
+* Bump of dependencies + switch to github actions ([f3bfd97](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/f3bfd970e899de2dcfb088b13dc66e31514a0050))
+
+### Fix
+
+* compiler issues with upgraded dependencies ([29f32a9](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/29f32a9a80dc3d523686dd37832776ec948decf0))
+* Correct generic type for resolver function ([0d87920](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/0d87920fa3a4e75852c2cf920635347de525ab6e))
+* remove debug action ([17b4554](https://github.com/jeanfortheweb/typeorm-fixture-builder/commit/17b455495e2f5b8c257970a66be9d578fb94af67))
+
 ## [3.0.1](https://github.com/jeanfortheweb/typeorm-fixture-builder/compare/v3.0.0...v3.0.1) (2024-11-20)
 
 
